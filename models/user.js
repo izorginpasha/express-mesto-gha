@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 // Опишем схему:
 const userSchema = new mongoose.Schema({
-  name: {// имя пользователя
+  name: { // имя пользователя
     type: String,
     required: true,
     minlength: 2,
@@ -22,5 +22,5 @@ const userSchema = new mongoose.Schema({
 });
 
 // создаём модель и экспортируем её
-
-module.exports = mongoose.model('user', userSchema);
+const model =mongoose.model('user', userSchema);
+module.exports = model;

@@ -2,19 +2,40 @@ const User = require('../models/user');
 
 const getUsers = async (req ,res) => {//получить список пользователеи
  try{
-  const user = await User.find({});
-  return res.status(200).send({user});
+  const users = await User.find({});
+  return res.status(200).json(users);
  }catch(e){
   console.error(e);
-  return res.status(500).send("erorr")
+  return res.status(500).json("erorr")
  }
 
 }
-const getUser = (req ,res) => {//получить отдельного пользователя
-  return res.status(200).send({getUser:true});
+const getUser = async (req ,res) => {//получить отдельного пользователя
+  try{
+    const {_id} = req.params;
+    const user = await User.findById(_id);
+    if(user===null){
+      return res.status(404).json("User nod found");
+    }
+    return res.status(200).json(user);
+
+  }catch(e){
+    console.error(e);
+  return res.status(500).json("erorr");
+  }
+
 }
-const createUser = (req ,res) => {//создать пользователя
-  return res.status(200).send({createUser:true});
+const createUser = async (req ,res) => {//создать пользователя
+  try{
+    console.log(req.body);
+    const user = await User.create(req.body);
+
+    return res.status(201).json(user);
+
+  }catch(e){
+    console.error(e);
+    return res.status(500).json("erorr")
+  }
 }
 module.exports ={
   getUsers,
