@@ -31,10 +31,10 @@ const createUser = async (req, res) => {
     console.log(req.body)
     const user = await User.create(req.body)
     if (!user.name ) {
-      return res.status(400).json({message:'Переданны некоректные данные user'})
+      return res.status(404).json({message:'Переданны некоректные данные user'})
     }
     if (!user.about ) {
-      return res.status(400).json({message:'Переданны некоректные данные about'})
+      return res.status(404).json({message:'Переданны некоректные данные about'})
     }
     return res.status(201).json(user)
   } catch (e) {
