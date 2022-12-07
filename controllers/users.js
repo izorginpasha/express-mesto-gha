@@ -16,9 +16,9 @@ const getUser = async (req, res) => {
     const { _id } = req.params
 
     const user = await User.findById(_id)
-    if (user === null) {
-      return res.status(404).json({message:'Пользователь не наиден'})
-    }
+    // if (user === null) {
+    //   return res.status(404).json({message:'Пользователь не наиден'})
+    // }
     return res.status(200).json(user)
   } catch (e) {
     console.error(e)
@@ -62,9 +62,9 @@ const patchAvatarUsers = async (req, res) => {
     //   return res.status(400).json({message:'Пререданны некоректные данные пользователя'})
     // }
     const user = await User.findByIdAndUpdate(req.user._id, { avatar: '132' })
-    if (user === null) {
-      return res.status(404).json({message:'Пользователь не наиден'})
-    }
+    // if (user === null) {
+    //   return res.status(404).json({message:'Пользователь не наиден'})
+    // }
     return res.status(201).json(user)
   } catch (e) {
     console.error(e)
