@@ -7,7 +7,7 @@ const getCards = async (req, res) => {
     return res.status(200).json(cards)
   } catch (e) {
     console.error(e)
-    return res.status(500).json('erorr')
+    return res.status(500).json('Произошла ошибка')
   }
 }
 const createCard = async (req, res) => {
@@ -17,11 +17,17 @@ const createCard = async (req, res) => {
     if (card === null) {
       return res.status(400).json('Пререданны некоректные данные карточки')
     }
+    if (!card.name) {
+      return res.status(400).json('Переданны некоректные данные карточки name')
+    }
+    if (!card.link) {
+      return res.status(400).json('Переданны некоректные данные карточки link')
+    }
 
     return res.status(201).json(card)
   } catch (e) {
     console.error(e)
-    return res.status(500).json('erorr')
+    return res.status(500).json('Произошла ошибка')
   }
 }
 const deleteCard = async (req, res) => {
@@ -30,16 +36,16 @@ const deleteCard = async (req, res) => {
     const { _id } = req.params
     const card = await Card.findOneAndDelete(_id)
     if (card === null) {
-      return res.status(404).json('Card nod found')
+      return res.status(404).json('Карточка не наидена')
     }
     return res.status(200).json('Карточка удалена')
   } catch (e) {
     console.error(e)
-    return res.status(500).json('erorr')
+    return res.status(500).json('Произошла ошибка')
   }
 }
 const  likeCard = async (req, res) => {
-  //удалить карточку
+  //лайк карточки
   try {
     if (req.params.cardId === null) {
       return res.status(400).json('Пререданны некоректные данные карточки')
@@ -50,16 +56,16 @@ const  likeCard = async (req, res) => {
       { new: true },
     )
     if (card === null) {
-      return res.status(404).json('idCard nod found')
+      return res.status(404).json('Карточка не наидена')
     }
     return res.status(200).json('like')
   } catch (e) {
     console.error(e)
-    return res.status(500).json('erorr')
+    return res.status(500).json('Произошла ошибка')
   }
 }
 const  dislikeCard = async (req, res) => {
-  //удалить карточку
+  //дизлайк карточки
   if (req.params.cardId === null) {
     return res.status(400).json('Пререданны некоректные данные карточки')
   }
@@ -70,12 +76,12 @@ const  dislikeCard = async (req, res) => {
       { new: true },
     )
     if (card === null) {
-      return res.status(404).json('Card nod found')
+      return res.status(404).json('Карточка не наидена')
     }
     return res.status(200).json('dislike')
   } catch (e) {
     console.error(e)
-    return res.status(500).json('erorr')
+    return res.status(500).json('Произошла ошибка')
   }
 }
 
