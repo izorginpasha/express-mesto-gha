@@ -7,7 +7,7 @@ const getCards = async (req, res) => {
     return res.status(200).json(cards)
   } catch (e) {
     console.error(e)
-    return res.status(500).json('Произошла ошибка')
+    return res.status(500).json({message:'Произошла ошибка'})
   }
 }
 const createCard = async (req, res) => {
@@ -15,19 +15,19 @@ const createCard = async (req, res) => {
   try {
     const card = await Card.create(req.body)
     if (card === null) {
-      return res.status(400).json('Пререданны некоректные данные карточки')
+      return res.status(400).json({message:'Пререданны некоректные данные карточки'})
     }
     if (!card.name) {
-      return res.status(400).json('Переданны некоректные данные карточки name')
+      return res.status(400).json({message:'Переданны некоректные данные карточки name'})
     }
     if (!card.link) {
-      return res.status(400).json('Переданны некоректные данные карточки link')
+      return res.status(400).json({message:'Переданны некоректные данные карточки link'})
     }
 
     return res.status(201).json(card)
   } catch (e) {
     console.error(e)
-    return res.status(500).json('Произошла ошибка')
+    return res.status(500).json({message:'Произошла ошибка'})
   }
 }
 const deleteCard = async (req, res) => {
@@ -36,19 +36,19 @@ const deleteCard = async (req, res) => {
     const { _id } = req.params
     const card = await Card.findOneAndDelete(_id)
     if (card === null) {
-      return res.status(404).json('Карточка не наидена')
+      return res.status(404).json({message:'Карточка не наидена'})
     }
-    return res.status(200).json('Карточка удалена')
+    return res.status(200).json({message:'Карточка удалена'})
   } catch (e) {
     console.error(e)
-    return res.status(500).json('Произошла ошибка')
+    return res.status(500).json({message:'Произошла ошибка'})
   }
 }
 const  likeCard = async (req, res) => {
   //лайк карточки
   try {
     if (req.params.cardId === null) {
-      return res.status(400).json('Пререданны некоректные данные карточки')
+      return res.status(400).json({message:'Пререданны некоректные данные карточки'})
     }
     const card = await Card.findByIdAndUpdate(
       req.params.cardId,
@@ -56,18 +56,18 @@ const  likeCard = async (req, res) => {
       { new: true },
     )
     if (card === null) {
-      return res.status(404).json('Карточка не наидена')
+      return res.status(404).json({message:'Карточка не наидена'})
     }
     return res.status(200).json('like')
   } catch (e) {
     console.error(e)
-    return res.status(500).json('Произошла ошибка')
+    return res.status(500).json({message:'Произошла ошибка'})
   }
 }
 const  dislikeCard = async (req, res) => {
   //дизлайк карточки
   if (req.params.cardId === null) {
-    return res.status(400).json('Пререданны некоректные данные карточки')
+    return res.status(400).json({message:'Пререданны некоректные данные карточки'})
   }
   try {
     const card = await Card.findByIdAndUpdate(
@@ -76,12 +76,12 @@ const  dislikeCard = async (req, res) => {
       { new: true },
     )
     if (card === null) {
-      return res.status(404).json('Карточка не наидена')
+      return res.status(404).json({message:'Карточка не наидена'})
     }
     return res.status(200).json('dislike')
   } catch (e) {
     console.error(e)
-    return res.status(500).json('Произошла ошибка')
+    return res.status(500).json({message:'Произошла ошибка'})
   }
 }
 
