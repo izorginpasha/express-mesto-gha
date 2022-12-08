@@ -22,7 +22,7 @@ const getUser = async (req, res) => {
     return res.status(200).json(user)
   } catch (e) {
     console.error(e)
-    return res.status(500).json({ message: 'Произошла ошибка' })
+    return res.status(400).json({ message: 'Произошла ошибка' })
   }
 }
 const createUser = async (req, res) => {
