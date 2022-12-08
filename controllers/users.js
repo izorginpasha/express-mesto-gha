@@ -17,7 +17,7 @@ const getUser = async (req, res) => {
 
     const user = await User.findById(_id)
     if (user === null) {
-      return Promise.reject(`Ошибка: ${res.status}`)
+      return res.status(404).json({ message: `Пользователь по указанному ${_id} не найден`})
     }
     return res.status(200).json(user)
   } catch (e) {
