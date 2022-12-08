@@ -30,33 +30,33 @@ const createUser = async (req, res) => {
   //создать пользователя
   try {
     if (!req.body) {
-      //return res.status(500).json({message:'Произошла ошибка'})
-      return Promise.reject(`Ошибка: ${res.status}`);
+      return res.status(500).json({message:'Произошла ошибка'})
+      //return Promise.reject(`Ошибка: ${res.status}`);
     }
 
     const user = await User.create(req.body)
-     // if (!user.name ) {
-    //   return res.status(404).json({message:'Переданны некоректные данные user'})
-    // }
-    // if (!user.about ) {
-    //   return res.status(404).json({message:'Переданны некоректные данные about'})
-    // }
-
-    if (user === null) {
-      return Promise.reject(`Ошибка: ${res.status}`);
-      //return res.status(500).json({message:'Произошла ошибка'})
-    }
-    if (!user.name ) {
-      return Promise.reject(`Ошибка: ${res.status}`);
-     // return res.status(500).json({message:'Произошла ошибка'})
+     if (!user.name ) {
+      return res.status(404).json({message:'Переданны некоректные данные user'})
     }
     if (!user.about ) {
-      return Promise.reject(`Ошибка: ${res.status}`);
-      //return res.status(500).json({message:'Произошла ошибка'})
+      return res.status(404).json({message:'Переданны некоректные данные about'})
+    }
+
+    if (user === null) {
+      // return Promise.reject(`Ошибка: ${res.status}`);
+      return res.status(500).json({message:'Произошла ошибка'})
+    }
+    if (!user.name ) {
+      // return Promise.reject(`Ошибка: ${res.status}`);
+     return res.status(500).json({message:'Произошла ошибка'})
+    }
+    if (!user.about ) {
+      // return Promise.reject(`Ошибка: ${res.status}`);
+      return res.status(500).json({message:'Произошла ошибка'})
     }
     if (!user.avatar ) {
-      return Promise.reject(`Ошибка: ${res.status}`);
-      //return res.status(500).json({message:'Произошла ошибка'})
+      // return Promise.reject(`Ошибка: ${res.status}`);
+      return res.status(500).json({message:'Произошла ошибка'})
     }
     return res.status(201).json(user)
   } catch (e) {
