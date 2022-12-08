@@ -16,9 +16,10 @@ const getUser = async (req, res) => {
     const { _id } = req.params
 
     const user = await User.findById(_id)
-    // if (user === null) {
-    //   return res.status(404).json({message:'Пользователь не наиден'})
-    // }
+    if (user === null) {
+      //return res.status(500).json({message:'Произошла ошибка'})
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
     return res.status(200).json(user)
   } catch (e) {
     console.error(e)
@@ -28,14 +29,35 @@ const getUser = async (req, res) => {
 const createUser = async (req, res) => {
   //создать пользователя
   try {
-    console.log(req.body)
+    if (!req.body) {
+      //return res.status(500).json({message:'Произошла ошибка'})
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
+
     const user = await User.create(req.body)
-    // if (!user.name ) {
+     // if (!user.name ) {
     //   return res.status(404).json({message:'Переданны некоректные данные user'})
     // }
     // if (!user.about ) {
     //   return res.status(404).json({message:'Переданны некоректные данные about'})
     // }
+
+    if (user === null) {
+      return Promise.reject(`Ошибка: ${res.status}`);
+      //return res.status(500).json({message:'Произошла ошибка'})
+    }
+    if (!user.name ) {
+      return Promise.reject(`Ошибка: ${res.status}`);
+     // return res.status(500).json({message:'Произошла ошибка'})
+    }
+    if (!user.about ) {
+      return Promise.reject(`Ошибка: ${res.status}`);
+      //return res.status(500).json({message:'Произошла ошибка'})
+    }
+    if (!user.avatar ) {
+      return Promise.reject(`Ошибка: ${res.status}`);
+      //return res.status(500).json({message:'Произошла ошибка'})
+    }
     return res.status(201).json(user)
   } catch (e) {
     console.error(e)
@@ -46,6 +68,9 @@ const patchUsers = async (req, res) => {
   //обновить данные пользователя
   try {
     const user = await User.findByIdAndUpdate(req.user._id)
+    if (user === null) {
+      return res.status(500).json({message:'Произошла ошибка'})
+    }
     // if (user === null) {
     //   return res.status(404).json({message:'Пользователь не наиден'})
     // }
@@ -62,10 +87,13 @@ const patchAvatarUsers = async (req, res) => {
     //   return res.status(400).json({message:'Пререданны некоректные данные пользователя'})
     // }
     const user = await User.findByIdAndUpdate(req.user._id, { avatar: '132' })
+    if (user === null) {
+      return res.status(500).json({message:'Произошла ошибка'})
+    }
     // if (user === null) {
     //   return res.status(404).json({message:'Пользователь не наиден'})
     // }
-    return res.status(201).json(user)
+    return res.status(201).json(User.findById(req.user._id))
   } catch (e) {
     console.error(e)
     return res.status(500).json({message:'Произошла ошибка'})
