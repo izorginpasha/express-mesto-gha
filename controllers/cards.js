@@ -52,14 +52,13 @@ const  likeCard = async (req, res) => {
     if (req.params.cardId === null) {
       return res.status(400).json({message:'Пререданны некоректные данные карточки'})
     }
+    console.groupCollapsed(req.params.cardId)
     const card = await Card.findByIdAndUpdate(
       req.params.cardId,
       { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
       { new: true },
     )
-    if (card === null) {
-      return res.status(404).json({message:'Карточка не наидена'})
-    }
+
     return res.status(200).json('like')
   } catch (e) {
     console.error(e)
@@ -77,9 +76,7 @@ const  dislikeCard = async (req, res) => {
       { $pull: { likes: req.user._id } }, // убрать _id из массива
       { new: true },
     )
-    if (card === null) {
-      return res.status(404).json({message:'Карточка не наидена'})
-    }
+
     return res.status(200).json('dislike')
   } catch (e) {
     console.error(e)
