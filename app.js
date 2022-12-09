@@ -4,12 +4,7 @@ const bodyParser = require('body-parser');//
 const routerUsers = require('./routes/routerUsers');//
 const routerCards = require('./routes/routerCards');//
 const { Console } = require('console');
-// подключаемся к серверу mongo
 
-// const Cat = mongoose.model('Cat', { name: String });
-
-// const kitty = new Cat({ name: 'Zildjian' });
-// kitty.save().then(() => console.log('meow'));
 // Слушаем 3000 порт
 
 const { PORT = 3000 } = process.env;//порт

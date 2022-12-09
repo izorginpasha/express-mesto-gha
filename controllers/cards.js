@@ -13,16 +13,18 @@ const getCards = async (req, res) => {
 const createCard = async (req, res) => {
   //создать карточку
   try {
-    const card = await Card.create(req.body)
-    if (card === null) {
+    if (req.body === null) {
       return res.status(400).json({message:'Пререданны некоректные данные карточки'})
     }
-    if (!card.name) {
+    if (!req.body .name) {
       return res.status(400).json({message:'Переданны некоректные данные карточки name'})
     }
-    if (!card.link) {
+    if (!req.body .link) {
       return res.status(400).json({message:'Переданны некоректные данные карточки link'})
     }
+
+     const card = await Card.create({name: req.body.name, link: req.body.link, owner: req.user._id})
+
 
     return res.status(201).json(card)
   } catch (e) {
