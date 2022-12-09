@@ -15,8 +15,8 @@ const userSchema = new mongoose.Schema({
     type: Object,
     required: true,
   },
-  likes:
-    {default:[]}
+  likes:[]
+
   ,
   createdAt:{//
     type: Date,

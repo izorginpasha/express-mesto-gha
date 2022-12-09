@@ -55,7 +55,7 @@ const  likeCard = async (req, res) => {
     console.groupCollapsed(req.params.cardId)
     const card = await Card.findByIdAndUpdate(
       req.params.cardId,
-      { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+      { $addToSet: { likes: req.user } }, // добавить _id в массив, если его там нет
       { new: true },
     )
 
