@@ -16,6 +16,7 @@ const getUser = async (req, res) => {
     const { _id } = req.params
 
     const user = await User.findById(_id)
+
     if (user === null) {
       return res.status(404).json({ message: `Пользователь по указанному ${_id} не найден`})
     }
@@ -52,13 +53,17 @@ const createUser = async (req, res) => {
 }
 const patchUsers = async (req, res) => {
   //обновить данные пользователя
-  try {
-    const user = await User.findByIdAndUpdate(req.user._id)
 
-    if (user === null) {
-      return res.status(404).json({ message: 'Пользователь не наиден' })
-    }
-    return res.status(201).json(user)
+  try {
+    const user = await User.findByIdAndUpdate(req.user._id,{name:req.body.name,about:req.body.about},{
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+      upsert: true // если пользователь не найден, он будет создан
+  })
+    console.log(user);
+    return res
+        .status(200)
+        .json(user)
   } catch (e) {
     console.error(e)
     return res.status(400).json({ message: 'Произошла ошибка' })

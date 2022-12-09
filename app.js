@@ -16,7 +16,7 @@ const { PORT = 3000 } = process.env;//порт
 const app = express();//создаем сервер
 // подключаем мидлвары, роуты и всё остальное...
 
-app.use((req,res,next)=>{req.user={_id: "638e1267266200ab729b2c61"};next();});//получение постоянного пользователя
+app.use((req,res,next)=>{req.user={_id: "6391f03e7917e106def7afa4"};next();});//получение постоянного пользователя
 
 app.use(bodyParser.json());
 app.use('/users', routerUsers);//роуты на пути user
