@@ -38,7 +38,7 @@ const deleteCard = async (req, res) => {
     const { _id } = req.params
     const card = await Card.findOneAndDelete(_id)
     if (card === null) {
-      return res.status(400).json({message:'Карточка не наидена'})
+      return res.status(404).json({message:'Карточка не наидена'})
     }
     return res.status(200).json({message:'Карточка удалена'})
   } catch (e) {
