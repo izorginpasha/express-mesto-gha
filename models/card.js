@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   },
   owner:{//
     type: Object,
-    // required: true,
+    required: true,
   },
   likes:
     {default:[]}
