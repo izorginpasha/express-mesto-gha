@@ -85,6 +85,7 @@ const patchAvatarUsers = async (req, res) => {
       runValidators: true, // данные будут валидированы перед изменением
       upsert: true // если пользователь не найден, он будет создан
   })
+
     return res
         .status(200)
         .json(user)
