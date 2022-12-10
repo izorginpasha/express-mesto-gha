@@ -35,11 +35,14 @@ const createCard = async (req, res) => {
 const deleteCard = async (req, res) => {
   //удалить карточку
   try {
-    const { _id } = req.params
-    const card = await Card.findOneAndDelete(_id)
-    if (card === null) {
+     const { cardId } = req.params
+
+    const card = await Card.findByIdAndRemove(cardId)
+    if (card===null){
       return res.status(404).json({message:'Карточка не наидена'})
     }
+      // const c = await Card.findById(cardId)
+      // if(c===null){return res.status(404).json({message:'Карточка не наидена'})}
     return res.status(200).json({message:'Карточка удалена'})
   } catch (e) {
     console.error(e)
