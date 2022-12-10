@@ -18,19 +18,19 @@ app.use('/users', routerUsers);//роуты на пути user
 app.use('/cards', routerCards);//роуты на пути Cards
 app.get('*', function (req, res){//обработка неправильных путей
   console.log('404 handler..')
-  res.status(400).json({message:'Произошла ошибка'})
+  res.status(404).json({message:'Произошла ошибка'})
 });
 app.patch('*', function (req, res){//обработка неправильных путей
   console.log('404 handler..')
-  res.status(400).json({message:'Произошла ошибка'})
+  res.status(404).json({message:'Произошла ошибка'})
 });
 app.delete('*', function (req, res){//обработка неправильных путей
   console.log('404 handler..')
-  res.status(400).json({message:'Произошла ошибка'})
+  res.status(404).json({message:'Произошла ошибка'})
 });
 app.post('*', function (req, res){//обработка неправильных путей
   console.log('404 handler..')
-  res.status(400).json({message:'Произошла ошибка'})
+  res.status(404).json({message:'Произошла ошибка'})
 });
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
