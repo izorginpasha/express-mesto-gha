@@ -18,7 +18,9 @@ const getUser = async (req, res) => {
     const user = await User.findById(_id)
 
     if (user === null) {
-      return res.status(404).json({ message: `Пользователь по указанному ${_id} не найден`})
+      return res
+        .status(404)
+        .json({ message: `Пользователь по указанному ${_id} не найден` })
     }
     return res.status(200).json(user)
   } catch (e) {
@@ -30,7 +32,7 @@ const createUser = async (req, res) => {
   //создать пользователя
   try {
     if (!req.body) {
-     return res
+      return res
         .status(404)
         .json({ message: 'Переданны некоректные данные user' })
     }
@@ -59,14 +61,16 @@ const patchUsers = async (req, res) => {
       .json({ message: 'Пререданны некоректные данные пользователя' })
   }
   try {
-    const user = await User.findByIdAndUpdate(req.user._id,{name:req.body.name,about:req.body.about},{
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
-      upsert: true // если пользователь не найден, он будет создан
-  })
-    return res
-        .status(200)
-        .json(user)
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { name: req.body.name, about: req.body.about },
+      {
+        new: true, // обработчик then получит на вход обновлённую запись
+        runValidators: true, // данные будут валидированы перед изменением
+        upsert: true, // если пользователь не найден, он будет создан
+      },
+    )
+    return res.status(200).json(user)
   } catch (e) {
     console.error(e)
     return res.status(400).json({ message: 'Произошла ошибка' })
@@ -80,16 +84,17 @@ const patchAvatarUsers = async (req, res) => {
         .status(400)
         .json({ message: 'Пререданны некоректные данные пользователя' })
     }
-    const user = await User.findByIdAndUpdate(req.user._id,{avatar:req.body.avatar},{
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
-      upsert: true // если пользователь не найден, он будет создан
-  })
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { avatar: req.body.avatar },
+      {
+        new: true, // обработчик then получит на вход обновлённую запись
+        runValidators: true, // данные будут валидированы перед изменением
+        upsert: true, // если пользователь не найден, он будет создан
+      },
+    )
 
-    return res
-        .status(200)
-        .json(user)
-
+    return res.status(200).json(user)
   } catch (e) {
     console.error(e)
     return res.status(400).json({ message: 'Произошла ошибка' })

@@ -1,30 +1,32 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 // Опишем схему:
 const userSchema = new mongoose.Schema({
-  name: {// имя
+  name: {
+    // имя
     type: String,
     required: true,
     minlength: 2,
     maxlength: 30,
   },
-  link: {//
+  link: {
+    //
     type: String,
     required: true,
   },
-  owner:{//
+  owner: {
+    //
     type: Object,
     required: true,
   },
-  likes:[]
+  likes: [],
 
-  ,
-  createdAt:{//
+  createdAt: {
+    //
     type: Date,
     default: Date.now,
   },
-
-});
+})
 
 // создаём модель и экспортируем её
-const model =mongoose.model('card', userSchema);
-module.exports =  model;
+const model = mongoose.model('card', userSchema)
+module.exports = model

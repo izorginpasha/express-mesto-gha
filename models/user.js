@@ -1,26 +1,27 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 // Опишем схему:
 const userSchema = new mongoose.Schema({
-  name: { // имя пользователя
+  name: {
+    // имя пользователя
     type: String,
     required: true,
     minlength: 2,
     maxlength: 30,
   },
-  about: {// информация о пользователе
+  about: {
+    // информация о пользователе
     type: String,
     required: true,
     minlength: 2,
     maxlength: 30,
-
   },
-  avatar:{// ссылка на аватарку
+  avatar: {
+    // ссылка на аватарку
     type: String,
     required: true,
-  }
-
-});
+  },
+})
 
 // создаём модель и экспортируем её
-const model =mongoose.model('user', userSchema);
-module.exports = model;
+const model = mongoose.model('user', userSchema)
+module.exports = model
