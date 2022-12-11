@@ -39,7 +39,7 @@ const createCard = async (req, res) => {
     return res.status(201).json(card)
   } catch (e) {
     console.error(e)
-    return res.status(500).json({ message: 'Произошла ошибка' })
+    return res.status(400).json({ message: 'Произошла ошибка' })
   }
 }
 const deleteCard = async (req, res) => {
@@ -71,7 +71,7 @@ const likeCard = async (req, res) => {
     return res.status(200).json('like')
   } catch (e) {
     console.error(e)
-    return res.status(500).json({ message: 'Произошла ошибка' })
+    return res.status(400).json({ message: 'Произошла ошибка' })
   }
 }
 const dislikeCard = async (req, res) => {
@@ -93,7 +93,7 @@ const dislikeCard = async (req, res) => {
     return res.status(200).json('dislike')
   } catch (e) {
     console.error(e)
-    return res.status(500).json({ message: 'Произошла ошибка' })
+    return res.status(400).json({ message: 'Произошла ошибка' })
   }
 }
 
