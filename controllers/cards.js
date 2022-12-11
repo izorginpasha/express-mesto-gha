@@ -7,7 +7,7 @@ const getCards = async (req, res) => {
     return res.status(200).json(cards)
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(500).json({ message: 'Произошла ошибка' })
   }
 }
 const createCard = async (req, res) => {
@@ -32,13 +32,14 @@ const createCard = async (req, res) => {
     const card = await Card.create({
       name: req.body.name,
       link: req.body.link,
-      owner: req.user._id,
+      owner: req.user,
     })
+    console.log(req.user)
 
     return res.status(201).json(card)
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(500).json({ message: 'Произошла ошибка' })
   }
 }
 const deleteCard = async (req, res) => {
@@ -50,8 +51,6 @@ const deleteCard = async (req, res) => {
     if (card === null) {
       return res.status(404).json({ message: 'Карточка не наидена' })
     }
-    // const c = await Card.findById(cardId)
-    // if(c===null){return res.status(404).json({message:'Карточка не наидена'})}
     return res.status(200).json({ message: 'Карточка удалена' })
   } catch (e) {
     console.error(e)
@@ -61,15 +60,9 @@ const deleteCard = async (req, res) => {
 const likeCard = async (req, res) => {
   //лайк карточки
   try {
-    if (req.params.cardId === null) {
-      return res
-        .status(400)
-        .json({ message: 'Пререданны некоректные данные карточки' })
-    }
-    console.groupCollapsed(req.params.cardId)
     const card = await Card.findByIdAndUpdate(
       req.params.cardId,
-      { $addToSet: { likes: req.user } }, // добавить _id в массив, если его там нет
+      { $addToSet: { likes: req.user } }, // добавить User в массив, если его там нет
       { new: true },
     )
     if (card === null) {
@@ -78,7 +71,7 @@ const likeCard = async (req, res) => {
     return res.status(200).json('like')
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(500).json({ message: 'Произошла ошибка' })
   }
 }
 const dislikeCard = async (req, res) => {
@@ -100,7 +93,7 @@ const dislikeCard = async (req, res) => {
     return res.status(200).json('dislike')
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(500).json({ message: 'Произошла ошибка' })
   }
 }
 

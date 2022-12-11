@@ -25,7 +25,7 @@ const getUser = async (req, res) => {
     return res.status(200).json(user)
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(500).json({ message: 'Произошла ошибка' })
   }
 }
 const createUser = async (req, res) => {
@@ -55,11 +55,7 @@ const createUser = async (req, res) => {
 }
 const patchUsers = async (req, res) => {
   //обновить данные пользователя
-  if (req.user._id === null) {
-    return res
-      .status(400)
-      .json({ message: 'Пререданны некоректные данные пользователя' })
-  }
+
   try {
     const user = await User.findByIdAndUpdate(
       req.user._id,
@@ -67,37 +63,36 @@ const patchUsers = async (req, res) => {
       {
         new: true, // обработчик then получит на вход обновлённую запись
         runValidators: true, // данные будут валидированы перед изменением
-        upsert: true, // если пользователь не найден, он будет создан
       },
     )
+    if (user === null) {
+      return res.status(404).json({ message: `Пользователь не найден` })
+    }
     return res.status(200).json(user)
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(500).json({ message: 'Произошла ошибка' })
   }
 }
 const patchAvatarUsers = async (req, res) => {
   //обновить данные аватарки
   try {
-    if (req.user._id === null) {
-      return res
-        .status(400)
-        .json({ message: 'Пререданны некоректные данные пользователя' })
-    }
     const user = await User.findByIdAndUpdate(
       req.user._id,
       { avatar: req.body.avatar },
       {
         new: true, // обработчик then получит на вход обновлённую запись
         runValidators: true, // данные будут валидированы перед изменением
-        upsert: true, // если пользователь не найден, он будет создан
       },
     )
+    if (user === null) {
+      return res.status(404).json({ message: `Пользователь не найден` })
+    }
 
     return res.status(200).json(user)
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(500).json({ message: 'Произошла ошибка' })
   }
 }
 module.exports = {

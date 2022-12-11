@@ -15,10 +15,17 @@ const userSchema = new mongoose.Schema({
   },
   owner: {
     //
-    type: Object,
+    ref: 'user',
+    type:mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  likes: [],
+  likes: [
+    {
+      ref: 'user',
+      type:mongoose.Schema.Types.ObjectId,
+      default: [],
+    }
+  ],
 
   createdAt: {
     //
