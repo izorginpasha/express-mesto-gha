@@ -1,13 +1,19 @@
 const Card = require('../models/card')
-
+const {
+  ERROR_not_found_data,
+  ERROR_necorrect_data,
+  ERROR_default ,
+  Good,
+  СreateGood
+} = require('../utils/constants')
 const getCards = async (req, res) => {
   //получить список карточек
   try {
     const cards = await Card.find({})
-    return res.status(200).json(cards)
+    return res.status(Good.code).json(cards)
   } catch (e) {
     console.error(e)
-    return res.status(500).json({ message: 'Произошла ошибка' })
+    return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
 const createCard = async (req, res) => {
@@ -15,18 +21,18 @@ const createCard = async (req, res) => {
   try {
     if (req.body === null) {
       return res
-        .status(400)
-        .json({ message: 'Пререданны некоректные данные карточки' })
+        .status(ERROR_necorrect_data.code)
+        .json( ERROR_necorrect_data.message)
     }
     if (!req.body.name) {
       return res
-        .status(400)
-        .json({ message: 'Переданны некоректные данные карточки name' })
+      .status(ERROR_necorrect_data.code)
+      .json( ERROR_necorrect_data.message)
     }
     if (!req.body.link) {
       return res
-        .status(400)
-        .json({ message: 'Переданны некоректные данные карточки link' })
+      .status(ERROR_necorrect_data.code)
+      .json( ERROR_necorrect_data.message)
     }
 
     const card = await Card.create({
@@ -36,10 +42,10 @@ const createCard = async (req, res) => {
     })
     console.log(req.user)
 
-    return res.status(201).json(card)
+    return res.status(СreateGood.code).json(card)
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
 const deleteCard = async (req, res) => {
@@ -49,12 +55,12 @@ const deleteCard = async (req, res) => {
 
     const card = await Card.findByIdAndRemove(cardId)
     if (card === null) {
-      return res.status(404).json({ message: 'Карточка не наидена' })
+      return res.status(ERROR_not_found_data.code).json(ERROR_not_found_data.message)
     }
-    return res.status(200).json({ message: 'Карточка удалена' })
+    return res.status(Good.code).json(Good.message)
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
 const likeCard = async (req, res) => {
@@ -66,20 +72,20 @@ const likeCard = async (req, res) => {
       { new: true },
     )
     if (card === null) {
-      return res.status(404).json({ message: 'Карточка не наидена' })
+      return res.status(ERROR_not_found_data.code).json(ERROR_not_found_data.message)
     }
-    return res.status(200).json('like')
+    return res.status(Good.code).json(Good.message)
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
 const dislikeCard = async (req, res) => {
   //дизлайк карточки
   if (req.params.cardId === null) {
     return res
-      .status(400)
-      .json({ message: 'Пререданны некоректные данные карточки' })
+    .status(ERROR_necorrect_data.code)
+    .json( ERROR_necorrect_data.message)
   }
   try {
     const card = await Card.findByIdAndUpdate(
@@ -88,12 +94,12 @@ const dislikeCard = async (req, res) => {
       { new: true },
     )
     if (card === null) {
-      return res.status(404).json({ message: 'Карточка не наидена' })
+      return res.status(ERROR_not_found_data.code).json(ERROR_not_found_data.message)
     }
-    return res.status(200).json('dislike')
+    return res.status(Good.code).json(Good.message)
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
 

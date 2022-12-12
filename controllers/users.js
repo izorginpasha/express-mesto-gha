@@ -1,13 +1,20 @@
 const User = require('../models/user')
+const {
+  ERROR_not_found_data,
+  ERROR_necorrect_data,
+  ERROR_default ,
+  Good,
+  СreateGood
+} = require('../utils/constants')
 
 const getUsers = async (req, res) => {
   //получить список пользователеи
   try {
     const users = await User.find({})
-    return res.status(200).json(users)
+    return res.status(Good.code).json(users)
   } catch (e) {
     console.error(e)
-    return res.status(500).json({ message: 'Произошла ошибка' })
+    return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
 const getUser = async (req, res) => {
@@ -19,13 +26,13 @@ const getUser = async (req, res) => {
 
     if (user === null) {
       return res
-        .status(404)
-        .json({ message: `Пользователь по указанному ${_id} не найден` })
+        .status(ERROR_not_found_data)
+        .json(ERROR_not_found_data.message)
     }
-    return res.status(200).json(user)
+    return res.status(Good.code).json(user)
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
 const createUser = async (req, res) => {
@@ -33,24 +40,24 @@ const createUser = async (req, res) => {
   try {
     if (!req.body) {
       return res
-        .status(404)
-        .json({ message: 'Переданны некоректные данные user' })
+        .status(ERROR_necorrect_data.code)
+        .json(ERROR_necorrect_data.message)
     }
     const user = await User.create(req.body)
     if (!user.name) {
       return res
-        .status(404)
-        .json({ message: 'Переданны некоректные данные user' })
+      .status(ERROR_necorrect_data.code)
+      .json(ERROR_necorrect_data.message)
     }
     if (!user.about) {
       return res
-        .status(404)
-        .json({ message: 'Переданны некоректные данные about' })
+      .status(ERROR_necorrect_data.code)
+      .json(ERROR_necorrect_data.message)
     }
-    return res.status(201).json(user)
+    return res.status(СreateGood.code).json(user)
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
 const patchUsers = async (req, res) => {
@@ -66,12 +73,14 @@ const patchUsers = async (req, res) => {
       },
     )
     if (user === null) {
-      return res.status(404).json({ message: `Пользователь не найден` })
+      return res
+        .status(ERROR_not_found_data)
+        .json(ERROR_not_found_data.message)
     }
-    return res.status(200).json(user)
+    return res.status(Good.code).json(user)
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ message: 'Произошла ошибка' })
+    return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
 const patchAvatarUsers = async (req, res) => {
@@ -86,13 +95,14 @@ const patchAvatarUsers = async (req, res) => {
       },
     )
     if (user === null) {
-      return res.status(404).json({ message: `Пользователь не найден` })
+      return res
+        .status(ERROR_not_found_data)
+        .json(ERROR_not_found_data.message)
     }
 
-    return res.status(200).json(user)
+    return res.status(Good.code).json(user)
   } catch (e) {
-    console.error(e)
-    return res.status(500).json({ message: 'Произошла ошибка' })
+    return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
 module.exports = {

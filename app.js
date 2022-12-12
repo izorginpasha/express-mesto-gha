@@ -1,6 +1,7 @@
+
+
 const express = require('express');//
 const mongoose = require('mongoose');//
-const bodyParser = require('body-parser');//
 const routerUsers = require('./routes/routerUsers');//
 const routerCards = require('./routes/routerCards');//
 const { Console } = require('console');
@@ -13,25 +14,14 @@ const app = express();//создаем сервер
 
 app.use((req,res,next)=>{req.user={_id: "6391f03e7917e106def7afa4"};next();});//получение постоянного пользователя
 
-app.use(bodyParser.json());
+express.json();
 app.use('/users', routerUsers);//роуты на пути user
 app.use('/cards', routerCards);//роуты на пути Cards
-app.get('*', function (req, res){//обработка неправильных путей
+app.all('*', function (req, res){//обработка неправильных путей
   console.log('404 handler..')
   res.status(404).json({message:'Произошла ошибка'})
 });
-app.patch('*', function (req, res){//обработка неправильных путей
-  console.log('404 handler..')
-  res.status(404).json({message:'Произошла ошибка'})
-});
-app.delete('*', function (req, res){//обработка неправильных путей
-  console.log('404 handler..')
-  res.status(404).json({message:'Произошла ошибка'})
-});
-app.post('*', function (req, res){//обработка неправильных путей
-  console.log('404 handler..')
-  res.status(404).json({message:'Произошла ошибка'})
-});
+
 try{
   mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
 
