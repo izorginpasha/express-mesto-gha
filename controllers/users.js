@@ -32,31 +32,28 @@ const getUser = async (req, res) => {
     return res.status(Good.code).json(user)
   } catch (e) {
     console.error(e)
+    if(e.name==="CastError"){
+      return res
+      .status(ERROR_necorrect_data.code)
+      .json(ERROR_necorrect_data.message)
+    }
     return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
 const createUser = async (req, res) => {
   //создать пользователя
   try {
-    if (!req.body) {
-      return res
-        .status(ERROR_necorrect_data.code)
-        .json(ERROR_necorrect_data.message)
-    }
+
     const user = await User.create(req.body)
-    if (!user.name) {
-      return res
-      .status(ERROR_necorrect_data.code)
-      .json(ERROR_necorrect_data.message)
-    }
-    if (!user.about) {
-      return res
-      .status(ERROR_necorrect_data.code)
-      .json(ERROR_necorrect_data.message)
-    }
+
     return res.status(СreateGood.code).json(user)
   } catch (e) {
     console.error(e)
+    if(e.name==="ValidationError"){
+      return res
+      .status(ERROR_necorrect_data.code)
+      .json(ERROR_necorrect_data.message)
+    }
     return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
@@ -72,14 +69,15 @@ const patchUsers = async (req, res) => {
         runValidators: true, // данные будут валидированы перед изменением
       },
     )
-    if (user === null) {
-      return res
-        .status(ERROR_not_found_data)
-        .json(ERROR_not_found_data.message)
-    }
+
     return res.status(Good.code).json(user)
   } catch (e) {
     console.error(e)
+    if(e.name==="ValidationError"){
+      return res
+      .status(ERROR_necorrect_data.code)
+      .json(ERROR_necorrect_data.message)
+    }
     return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
@@ -94,14 +92,15 @@ const patchAvatarUsers = async (req, res) => {
         runValidators: true, // данные будут валидированы перед изменением
       },
     )
-    if (user === null) {
-      return res
-        .status(ERROR_not_found_data)
-        .json(ERROR_not_found_data.message)
-    }
+
 
     return res.status(Good.code).json(user)
   } catch (e) {
+    if(e.name==="ValidationError"){
+      return res
+      .status(ERROR_necorrect_data.code)
+      .json(ERROR_necorrect_data.message)
+    }
     return res.status(ERROR_default.code).json(ERROR_default.message)
   }
 }
