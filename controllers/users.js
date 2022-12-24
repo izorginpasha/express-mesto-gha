@@ -26,8 +26,8 @@ const getUser = async (req, res) => {
 
     if (user === null) {
       return res
-        .status(ERROR_not_found_data)
-        .json({message: ERROR_not_found_data.message})
+      .status(ERROR_not_found_data.code)
+      .json({message: ERROR_not_found_data.message})
     }
     return res.status(Good.code).json(user)
   } catch (e) {

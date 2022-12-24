@@ -42,7 +42,11 @@ const deleteCard = async (req, res) => {
     const { cardId } = req.params
 
     const card = await Card.findByIdAndRemove(cardId)
-
+    if (card === null) {
+      return res
+      .status(ERROR_not_found_data.code)
+      .json({message: ERROR_not_found_data.message})
+    }
     return res.status(Good.code).json(Good.message)
   } catch (e) {
     console.error(e)
@@ -62,7 +66,13 @@ const likeCard = async (req, res) => {
       { $addToSet: { likes: req.user } }, // добавить User в массив, если его там нет
       { new: true },
     )
+    if (card === null) {
+      return res
+      .status(ERROR_not_found_data.code)
+      .json({message: ERROR_not_found_data.message})
+    }
     const newCard =  await Card.find({}).populate(['owner','likes'])
+
 
     return res.status(Good.code).json(newCard)
   } catch (e) {
