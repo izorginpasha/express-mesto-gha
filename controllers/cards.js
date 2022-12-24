@@ -1,15 +1,16 @@
 const Card = require('../models/card')
+const User = require('../models/user')
 const {
   ERROR_not_found_data,
   ERROR_necorrect_data,
-  ERROR_default,
+  ERROR_default ,
   Good,
-  СreateGood,
+  СreateGood
 } = require('../utils/constants')
 const getCards = async (req, res) => {
   //получить список карточек
   try {
-    const cards = await Card.find({})
+    const cards = await Card.find({}).populate(['owner','likes'])
     return res.status(Good.code).json(cards)
   } catch (e) {
     console.error(e)
@@ -24,14 +25,13 @@ const createCard = async (req, res) => {
       link: req.body.link,
       owner: req.user,
     })
-
     return res.status(СreateGood.code).json(card)
   } catch (e) {
     console.error(e)
-    if (e.name === 'ValidationError') {
+    if(e.name==="ValidationError"){
       return res
-        .status(ERROR_necorrect_data.code)
-        .json(ERROR_necorrect_data.message)
+      .status(ERROR_necorrect_data.code)
+      .json(ERROR_necorrect_data.message)
     }
     return res.status(ERROR_default.code).json(ERROR_default.message)
   }
@@ -46,10 +46,10 @@ const deleteCard = async (req, res) => {
     return res.status(Good.code).json(Good.message)
   } catch (e) {
     console.error(e)
-    if (e.name === 'ValidationError') {
+    if(e.name==="CastError"){
       return res
-        .status(ERROR_necorrect_data.code)
-        .json(ERROR_necorrect_data.message)
+      .status(ERROR_necorrect_data.code)
+      .json(ERROR_necorrect_data.message)
     }
     return res.status(ERROR_default.code).json(ERROR_default.message)
   }
@@ -62,14 +62,15 @@ const likeCard = async (req, res) => {
       { $addToSet: { likes: req.user } }, // добавить User в массив, если его там нет
       { new: true },
     )
+    const newCard =  await Card.find({}).populate(['owner','likes'])
 
-    return res.status(Good.code).json(Good.message)
+    return res.status(Good.code).json(newCard)
   } catch (e) {
     console.error(e)
-    if (e.name === 'ValidationError') {
+    if(e.name==="CastError"){
       return res
-        .status(ERROR_necorrect_data.code)
-        .json(ERROR_necorrect_data.message)
+      .status(ERROR_necorrect_data.code)
+      .json(ERROR_necorrect_data.message)
     }
     return res.status(ERROR_default.code).json(ERROR_default.message)
   }
@@ -78,8 +79,8 @@ const dislikeCard = async (req, res) => {
   //дизлайк карточки
   if (req.params.cardId === null) {
     return res
-      .status(ERROR_necorrect_data.code)
-      .json(ERROR_necorrect_data.message)
+    .status(ERROR_necorrect_data.code)
+    .json( ERROR_necorrect_data.message)
   }
   try {
     const card = await Card.findByIdAndUpdate(
@@ -87,14 +88,16 @@ const dislikeCard = async (req, res) => {
       { $pull: { likes: req.user } }, // убрать _id из массива
       { new: true },
     )
-
-    return res.status(Good.code).json(Good.message)
+    if (card === null) {
+      return res.status(ERROR_not_found_data.code).json(ERROR_not_found_data.message)
+    }
+    return res.status(Good.code).json(card)
   } catch (e) {
     console.error(e)
-    if (e.name === 'ValidationError') {
+    if(e.name==="CastError"){
       return res
-        .status(ERROR_necorrect_data.code)
-        .json(ERROR_necorrect_data.message)
+      .status(ERROR_necorrect_data.code)
+      .json(ERROR_necorrect_data.message)
     }
     return res.status(ERROR_default.code).json(ERROR_default.message)
   }

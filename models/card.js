@@ -15,14 +15,14 @@ const userSchema = new mongoose.Schema({
   },
   owner: {
     //
-    ref: 'user',
     type:mongoose.Schema.Types.ObjectId,
+    ref: 'user',
     required: true,
   },
   likes: [
     {
-      ref: 'user',
       type:mongoose.Schema.Types.ObjectId,
+      ref: 'user',
       default: [],
     }
   ],
