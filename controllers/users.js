@@ -14,7 +14,7 @@ const getUsers = async (req, res) => {
     return res.status(Good.code).json(users)
   } catch (e) {
     console.error(e)
-    return res.status(ERROR_default.code).json(ERROR_default.message)
+    return res.status(ERROR_default.code).json({message: ERROR_default.message})
   }
 }
 const getUser = async (req, res) => {
@@ -27,7 +27,7 @@ const getUser = async (req, res) => {
     if (user === null) {
       return res
         .status(ERROR_not_found_data)
-        .json(ERROR_not_found_data.message)
+        .json({message: ERROR_not_found_data.message})
     }
     return res.status(Good.code).json(user)
   } catch (e) {
@@ -35,9 +35,9 @@ const getUser = async (req, res) => {
     if(e.name==="CastError"){
       return res
       .status(ERROR_necorrect_data.code)
-      .json(ERROR_necorrect_data.message)
+      .json({message: ERROR_necorrect_data.message})
     }
-    return res.status(ERROR_default.code).json(ERROR_default.message)
+    return res.status(ERROR_default.code).json({message: ERROR_default.message})
   }
 }
 const createUser = async (req, res) => {
@@ -76,9 +76,9 @@ const patchUsers = async (req, res) => {
     if(e.name==="ValidationError"){
       return res
       .status(ERROR_necorrect_data.code)
-      .json(ERROR_necorrect_data.message)
+      .json({message: ERROR_necorrect_data.message})
     }
-    return res.status(ERROR_default.code).json(ERROR_default.message)
+    return res.status(ERROR_default.code).json({message: ERROR_default.message})
   }
 }
 const patchAvatarUsers = async (req, res) => {
@@ -99,9 +99,9 @@ const patchAvatarUsers = async (req, res) => {
     if(e.name==="ValidationError"){
       return res
       .status(ERROR_necorrect_data.code)
-      .json(ERROR_necorrect_data.message)
+      .json({message: ERROR_necorrect_data.message})
     }
-    return res.status(ERROR_default.code).json(ERROR_default.message)
+    return res.status(ERROR_default.code).json({message: ERROR_default.message})
   }
 }
 module.exports = {
