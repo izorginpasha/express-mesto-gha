@@ -52,9 +52,9 @@ const createUser = async (req, res) => {
     if(e.name==="ValidationError"){
       return res
       .status(ERROR_necorrect_data.code)
-      .json(ERROR_necorrect_data.message)
+      .json({message: ERROR_necorrect_data.message})
     }
-    return res.status(ERROR_default.code).json(ERROR_default.message)
+    return res.status(ERROR_default.code).json({message: ERROR_default.message})
   }
 }
 const patchUsers = async (req, res) => {
