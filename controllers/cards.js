@@ -87,7 +87,7 @@ const likeCard = async (req, res) => {
     console.error(e)
     if (e.name === 'CastError') {
       return res
-        .status(EERROR_NECORRECT_DATA.code)
+        .status(ERROR_NECORRECT_DATA.code)
         .json({ message: ERROR_NECORRECT_DATA.message })
     }
     return res
