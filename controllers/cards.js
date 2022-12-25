@@ -71,7 +71,7 @@ const likeCard = async (req, res) => {
       .status(ERROR_not_found_data.code)
       .json({message: ERROR_not_found_data.message})
     }
-    const newCard =  await Card.find({}).populate(['owner','likes'])
+    const newCard =  await Card.find({_id: req.params.cardId}).populate(['owner','likes'])
 
 
     return res.status(Good.code).json(newCard)

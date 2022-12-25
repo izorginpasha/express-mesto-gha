@@ -26,7 +26,10 @@ app.all('*', function (req, res){//обработка неправильных �
 try{
   mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
 
-},()=>{
+},(err)=>{
+  if(err){
+    return console.log("not connected MongoDB")
+  }
   console.log("Connected MongoDB");
   app.listen(PORT, () => {//запуск сервера
     // Если всё работает, консоль покажет, какой порт приложение слушает
