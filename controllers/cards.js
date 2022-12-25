@@ -32,8 +32,8 @@ const createCard = async (req, res) => {
     console.error(e)
     if (e.name === 'ValidationError') {
       return res
-        .status(ERROR_NOT_FOUND_DATA.code)
-        .json({ message: ERROR_NOT_FOUND_DATA.message })
+        .status(ERROR_NECORRECT_DATA.code)
+        .json({ message: ERROR_NECORRECT_DATA.message })
     }
     return res
       .status(ERROR_DEFAULT.code)
@@ -56,8 +56,8 @@ const deleteCard = async (req, res) => {
     console.error(e)
     if (e.name === 'CastError') {
       return res
-        .status(ERROR_NOT_FOUND_DATA.code)
-        .json({ message: ERROR_NOT_FOUND_DATA.message })
+        .status(ERROR_NECORRECT_DATA.code)
+        .json({ message: ERROR_NECORRECT_DATA.message })
     }
     return res
       .status(ERROR_DEFAULT.code)
@@ -87,8 +87,8 @@ const likeCard = async (req, res) => {
     console.error(e)
     if (e.name === 'CastError') {
       return res
-        .status(ERROR_NOT_FOUND_DATA.code)
-        .json({ message: ERROR_NOT_FOUND_DATA.message })
+        .status(EERROR_NECORRECT_DATA.code)
+        .json({ message: ERROR_NECORRECT_DATA.message })
     }
     return res
       .status(ERROR_DEFAULT.code)
@@ -122,8 +122,8 @@ const dislikeCard = async (req, res) => {
     console.error(e)
     if (e.name === 'CastError') {
       return res
-        .status(ERROR_NOT_FOUND_DATA.code)
-        .json({ message: ERROR_NOT_FOUND_DATA.message })
+        .status(ERROR_NECORRECT_DATA.code)
+        .json({ message: ERROR_NECORRECT_DATA.message })
     }
     return res
       .status(ERROR_DEFAULT.code)
