@@ -1,20 +1,22 @@
 const Card = require('../models/card')
 const User = require('../models/user')
 const {
-  ERROR_not_found_data,
-  ERROR_necorrect_data,
-  ERROR_default ,
-  Good,
-  СreateGood
+  ERROR_NOT_FOUND_DATA,
+  ERROR_NECORRECT_DATA,
+  ERROR_DEFAULT,
+  GOOD,
+  CREATE_GOOD,
 } = require('../utils/constants')
 const getCards = async (req, res) => {
   //получить список карточек
   try {
-    const cards = await Card.find({}).populate(['owner','likes'])
-    return res.status(Good.code).json(cards)
+    const cards = await Card.find({}).populate(['owner', 'likes'])
+    return res.status(GOOD.code).json(cards)
   } catch (e) {
     console.error(e)
-    return res.status(ERROR_default.code).json({message: ERROR_default.message})
+    return res
+      .status(ERROR_DEFAULT.code)
+      .json({ message: ERROR_DEFAULT.message })
   }
 }
 const createCard = async (req, res) => {
@@ -25,15 +27,17 @@ const createCard = async (req, res) => {
       link: req.body.link,
       owner: req.user,
     })
-    return res.status(СreateGood.code).json(card)
+    return res.status(CREATE_GOOD.code).json(card)
   } catch (e) {
     console.error(e)
-    if(e.name==="ValidationError"){
+    if (e.name === 'ValidationError') {
       return res
-      .status(ERROR_necorrect_data.code)
-      .json({message: ERROR_necorrect_data.message})
+        .status(ERROR_NOT_FOUND_DATA.code)
+        .json({ message: ERROR_NOT_FOUND_DATA.message })
     }
-    return res.status(ERROR_default.code).json({message: ERROR_default.message})
+    return res
+      .status(ERROR_DEFAULT.code)
+      .json({ message: ERROR_DEFAULT.message })
   }
 }
 const deleteCard = async (req, res) => {
@@ -44,18 +48,20 @@ const deleteCard = async (req, res) => {
     const card = await Card.findByIdAndRemove(cardId)
     if (card === null) {
       return res
-      .status(ERROR_not_found_data.code)
-      .json({message: ERROR_not_found_data.message})
+        .status(ERROR_NOT_FOUND_DATA.code)
+        .json({ message: ERROR_NOT_FOUND_DATA.message })
     }
-    return res.status(Good.code).json(Good.message)
+    return res.status(GOOD.code).json(GOOD.message)
   } catch (e) {
     console.error(e)
-    if(e.name==="CastError"){
+    if (e.name === 'CastError') {
       return res
-      .status(ERROR_necorrect_data.code)
-      .json({message: ERROR_necorrect_data.message})
+        .status(ERROR_NOT_FOUND_DATA.code)
+        .json({ message: ERROR_NOT_FOUND_DATA.message })
     }
-    return res.status(ERROR_default.code).json({message: ERROR_default.message})
+    return res
+      .status(ERROR_DEFAULT.code)
+      .json({ message: ERROR_DEFAULT.message })
   }
 }
 const likeCard = async (req, res) => {
@@ -68,48 +74,60 @@ const likeCard = async (req, res) => {
     )
     if (card === null) {
       return res
-      .status(ERROR_not_found_data.code)
-      .json({message: ERROR_not_found_data.message})
+        .status(ERROR_NOT_FOUND_DATA.code)
+        .json({ message: ERROR_NOT_FOUND_DATA.message })
     }
-    const newCard =  await Card.find({_id: req.params.cardId}).populate(['owner','likes'])
+    const newCard = await Card.find({ _id: req.params.cardId }).populate([
+      'owner',
+      'likes',
+    ])
 
-
-    return res.status(Good.code).json(newCard)
+    return res.status(GOOD.code).json(newCard)
   } catch (e) {
     console.error(e)
-    if(e.name==="CastError"){
+    if (e.name === 'CastError') {
       return res
-      .status(ERROR_necorrect_data.code)
-      .json({message: ERROR_necorrect_data.message})
+        .status(ERROR_NOT_FOUND_DATA.code)
+        .json({ message: ERROR_NOT_FOUND_DATA.message })
     }
-    return res.status(ERROR_default.code).json({message: ERROR_default.message})
+    return res
+      .status(ERROR_DEFAULT.code)
+      .json({ message: ERROR_DEFAULT.message })
   }
 }
 const dislikeCard = async (req, res) => {
   //дизлайк карточки
   if (req.params.cardId === null) {
     return res
-    .status(ERROR_necorrect_data.code)
-    .json( {message: ERROR_necorrect_data.message})
+      .status(ERROR_NOT_FOUND_DATA.code)
+      .json({ message: ERROR_NOT_FOUND_DATA.message })
   }
   try {
     const card = await Card.findByIdAndUpdate(
       req.params.cardId,
-      { $pull: { likes: req.user } }, // убрать _id из массива
+      { $pull: { likes: req.user._id } }, // убрать _id из массива
       { new: true },
     )
     if (card === null) {
-      return res.status(ERROR_not_found_data.code).json({message: ERROR_not_found_data.message})
+      return res
+        .status(ERROR_NOT_FOUND_DATA.code)
+        .json({ message: ERROR_NOT_FOUND_DATA.message })
     }
-    return res.status(Good.code).json(card)
+    const newCard = await Card.find({ _id: req.params.cardId }).populate([
+      'owner',
+      'likes',
+    ])
+    return res.status(GOOD.code).json(newCard)
   } catch (e) {
     console.error(e)
-    if(e.name==="CastError"){
+    if (e.name === 'CastError') {
       return res
-      .status(ERROR_necorrect_data.code)
-      .json({message: ERROR_necorrect_data.message})
+        .status(ERROR_NOT_FOUND_DATA.code)
+        .json({ message: ERROR_NOT_FOUND_DATA.message })
     }
-    return res.status(ERROR_default.code).json({message: ERROR_default.message})
+    return res
+      .status(ERROR_DEFAULT.code)
+      .json({ message: ERROR_DEFAULT.message })
   }
 }
 
