@@ -1,5 +1,5 @@
 
-const  bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 const express = require('express');//
 const mongoose = require('mongoose');//
 const routerUsers = require('./routes/routerUsers');//
@@ -13,30 +13,27 @@ const { PORT = 3000 } = process.env;//порт
 const app = express();//создаем сервер
 // подключаем мидлвары, роуты и всё остальное...
 app.use(bodyParser.json());
-app.use((req,res,next)=>{req.user={_id: "6391f03e7917e106def7afa4"};next();});//получение постоянного пользователя
+app.use((req, res, next) => { req.user = { _id: "63b3be5165e4e2c56c9f3eee" }; next(); });//получение постоянного пользователя
 
 
 app.use('/users', routerUsers);//роуты на пути user
 app.use('/cards', routerCards);//роуты на пути Cards
-app.all('*', function (req, res){//обработка неправильных путей
+app.all('*', function (req, res) {//обработка неправильных путей
   console.log('404 handler..')
-  res.status(404).json({message:'Произошла ошибка'})
+  res.status(404).json({ message: 'Произошла ошибка' })
 });
 
-try{
+try {
   mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
 
-},(err)=>{
-  if(err){
-    return console.log("not connected MongoDB")
-  }
-  console.log("Connected MongoDB");
-  app.listen(PORT, () => {//запуск сервера
-    // Если всё работает, консоль покажет, какой порт приложение слушает
-    console.log(`App listening on port ${PORT}`)
-})
-})
-}catch{
+  }, () => {
+    console.log("Connected MongoDB");
+    app.listen(PORT, () => {//запуск сервера
+      // Если всё работает, консоль покажет, какой порт приложение слушает
+      console.log(`App listening on port ${PORT}`)
+    })
+  })
+} catch {
   console.log("not connected MongoDB");
 
 }
