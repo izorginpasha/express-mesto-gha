@@ -1,8 +1,13 @@
 {
   "name": "express-mesto-gha",
   "version": "1.0.0",
-  "description": "[![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)\r # Проект Mesto фронтенд + бэкенд",
+  "description": "Учебный проект от Яндекс Практикум, по направлению бекенд,. \r Данный проект представляет результат ознакомительной работы с библиотекой express, mongoose.\r В результате работы создано простои веб сервер для просмотра мест отдыха.",
   "main": "app.js",
+  "devDependencies": {
+    "eslint": "^8.30.0",
+    "eslint-plugin-react": "^7.31.11",
+    "nodemon": "^2.0.20"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint",
@@ -13,21 +18,16 @@
     "type": "git",
     "url": "git+https://github.com/izorginpasha/express-mesto-gha.git"
   },
-  "author": "Izorgin_Pasha",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/izorginpasha/express-mesto-gha/issues"
   },
   "homepage": "https://github.com/izorginpasha/express-mesto-gha#readme",
-  "devDependencies": {
-    "eslint": "^8.28.0",
+  "dependencies": {
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "nodemon": "^2.0.20"
-  },
-  "dependencies": {
-    "body-parser": "^1.20.1",
     "express": "^4.18.2",
-    "mongoose": "^6.7.4"
+    "mongoose": "^6.8.1"
   }
 }
