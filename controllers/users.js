@@ -1,4 +1,5 @@
 const User = require('../models/user')
+
 const {
   ERROR_NOT_FOUND_DATA,
   ERROR_NECORRECT_DATA,
@@ -47,6 +48,10 @@ const getUser = async (req, res) => {
 const createUser = async (req, res) => {
   //создать пользователя
   try {
+    const body = {...req.body}
+    const {password, email } = body
+
+
     const user = await User.create(req.body)
 
     return res.status(CREATE_GOOD.code).json(user)
