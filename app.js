@@ -4,8 +4,12 @@ const express = require('express');//
 const mongoose = require('mongoose');//
 const routerUsers = require('./routes/routerUsers');//
 const routerCards = require('./routes/routerCards');//
+const auth = require('./middlewares/auth');
 const { Console } = require('console');
-
+const {
+  login,
+  createUser
+} = require('./controllers/users')
 // Слушаем 3000 порт
 
 
@@ -13,9 +17,12 @@ const { PORT = 3000 } = process.env;//порт
 const app = express();//создаем сервер
 // подключаем мидлвары, роуты и всё остальное...
 app.use(bodyParser.json());
-app.use((req, res, next) => { req.user = { _id: "63b3be5165e4e2c56c9f3eee" }; next(); });//получение постоянного пользователя
-
-
+// роуты, не требующие авторизации,
+app.post('/signin', login);
+app.post('/signup', createUser);
+// авторизация
+app.use(auth);
+app.use('/sing', routerUsers);//роуты на пути user
 app.use('/users', routerUsers);//роуты на пути user
 app.use('/cards', routerCards);//роуты на пути Cards
 app.all('*', function (req, res) {//обработка неправильных путей
