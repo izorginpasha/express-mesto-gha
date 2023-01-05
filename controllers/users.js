@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const validator = require('validator')
 
 const {
   ERROR_NOT_FOUND_DATA,
@@ -48,13 +49,22 @@ const getUser = async (req, res) => {
 const createUser = async (req, res) => {
   //создать пользователя
   try {
+
+
     const body = {...req.body}
     const {password, email } = body
+    console.log(validator.isEmail(email))
+    if(validator.isEmail(email)){
+      const user = await User.create(body)
+      return res.status(CREATE_GOOD.code).json(user)
+    }
+    return res
+        .status(ERROR_NECORRECT_DATA.code)
+        .json({ message: ERROR_NECORRECT_DATA.message })
 
+    // const user = await User.create(req.body)
 
-    const user = await User.create(req.body)
-
-    return res.status(CREATE_GOOD.code).json(user)
+    // return res.status(CREATE_GOOD.code).json(user)
   } catch (e) {
     console.error(e)
     if (e.name === 'ValidationError') {
