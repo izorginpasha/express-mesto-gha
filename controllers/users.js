@@ -9,6 +9,7 @@ const {
   ERROR_DEFAULT,
   GOOD,
   CREATE_GOOD,
+  ERROR_AUTH
 } = require("../utils/constants");
 
 const getUsers = async (req, res) => {
@@ -71,7 +72,7 @@ const createUser = async (req, res) => {
      body.password =   await bcrypt.hash(password, 10);
      // передаем базе
      const user = await User.create(body);
-     return res.status(CREATE_GOOD.code).json(user._id);
+     return res.status(CREATE_GOOD.code).json(user);
 
     }
     return res
@@ -79,6 +80,11 @@ const createUser = async (req, res) => {
       .json({ message: ERROR_NECORRECT_DATA.message });
   } catch (e) {
     console.error(e);
+    if (e.code === 11000) {
+      return res
+        .status(ERROR_AUTH.code)
+        .json({ message: ERROR_AUTH.message });
+  }
     if (e.name === "ValidationError") {
       return res
         .status(ERROR_NECORRECT_DATA.code)

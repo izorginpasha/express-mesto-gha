@@ -18,6 +18,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, 'some-secret-key');
   } catch (err) {
+    console.log(err)
     return res
     .status(ERROR_AUTH.code)
     .send({message:ERROR_AUTH.message});
