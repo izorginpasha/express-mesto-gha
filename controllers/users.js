@@ -74,7 +74,15 @@ const createUser = async (req, res) => {
       body.password = await bcrypt.hash(password, 10);
       // передаем базе
       const user = await User.create(body);
-      return res.status(CREATE_GOOD.code).json({name:user.name,about:user.about,email:user.email,avatar:user.avatar,_id:user._id});
+      return res
+        .status(CREATE_GOOD.code)
+        .json({
+          name: user.name,
+          about: user.about,
+          email: user.email,
+          avatar: user.avatar,
+          _id: user._id,
+        });
     }
     return res
       .status(ERROR_NECORRECT_DATA.code)
@@ -170,28 +178,36 @@ const patchAvatarUsers = async (req, res) => {
 const getUserId = async (req, res) => {
   //получить отдельного пользователя
   try {
-    const { _id } = req.params
-console.log(_id)
-    const user = await User.findById(_id)
+    const { _id } = req.params;
+    console.log(_id);
+    const user = await User.findById(_id);
 
     if (user === null) {
       return res
         .status(ERROR_NOT_FOUND_DATA.code)
-        .json({ message: ERROR_NOT_FOUND_DATA.message })
+        .json({ message: ERROR_NOT_FOUND_DATA.message });
     }
-    return res.status(GOOD.code).json({name:user.name,about:user.about,email:user.email,avatar:user.avatar,_id:user._id})
+    return res
+      .status(GOOD.code)
+      .json({
+        name: user.name,
+        about: user.about,
+        email: user.email,
+        avatar: user.avatar,
+        _id: user._id,
+      });
   } catch (e) {
-    console.error(e)
-    if (e.name === 'CastError') {
+    console.error(e);
+    if (e.name === "CastError") {
       return res
         .status(ERROR_NECORRECT_DATA.code)
-        .json({ message: ERROR_NECORRECT_DATA.message })
+        .json({ message: ERROR_NECORRECT_DATA.message });
     }
     return res
       .status(ERROR_DEFAULT.code)
-      .json({ message: ERROR_DEFAULT.message })
+      .json({ message: ERROR_DEFAULT.message });
   }
-}
+};
 module.exports = {
   getUsers,
   getUser,
@@ -199,5 +215,5 @@ module.exports = {
   patchUsers,
   patchAvatarUsers,
   login,
-  getUserId
+  getUserId,
 };
