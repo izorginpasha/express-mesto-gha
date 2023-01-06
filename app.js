@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 app.post('/signin', login);
 app.post('/signup', createUser);
 // авторизация
-//app.use(auth);
+app.use(auth);
 app.use('/sing', routerUsers);//роуты на пути user
 app.use('/users', routerUsers);//роуты на пути user
 app.use('/cards', routerCards);//роуты на пути Cards

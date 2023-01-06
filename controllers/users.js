@@ -99,7 +99,7 @@ const getUser = async (req, res) => {
   //получить отдельного пользователя
   try {
 
-
+console.log(req.user);
     const user = await User.findById(req.user._id);
 
     if (user === null) {
