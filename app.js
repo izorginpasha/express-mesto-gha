@@ -22,14 +22,7 @@ const shemaUser = celebrate({
     avatar: Joi.string().pattern (new RegExp('(www|http:|https:)+\S*')).default('https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png')// ссылка на аватарку
   }),
 })
-const shemaCards = celebrate({
-  [Segments.BODY]: Joi.object().keys({
-    name: Joi.string().min(2).max(30).required(),// имя
-    link: Joi.string().pattern (new RegExp('(www|http:|https:)+\S*')).required(),// ссылка
-    likes:Joi.object().default([]),
-    createdAt: Joi.date().default(Date.now),
-  }),
-})
+
 const { PORT = 3000 } = process.env;//порт
 const app = express();//создаем сервер
 // подключаем мидлвары, роуты и всё остальное...
@@ -39,8 +32,8 @@ app.post('/signin',shemaUser, login);
 app.post('/signup',shemaUser, createUser);
 // авторизация
 app.use(auth);
-app.use('/sing',shemaUser, routerUsers);//роуты на пути user
-app.use('/users',shemaUser, routerUsers);//роуты на пути user
+app.use('/sing', routerUsers);//роуты на пути user
+app.use('/users', routerUsers);//роуты на пути user
 app.use('/cards',routerCards);//роуты на пути Cards
 app.all('*', function (req, res) {//обработка неправильных путей
   console.log('404 handler..')
