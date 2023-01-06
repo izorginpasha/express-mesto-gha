@@ -52,7 +52,6 @@ router.patch(
   celebrate({
     [Segments.BODY]: Joi.object().keys({
       avatar: Joi.string()
-        .required()
         .pattern(new RegExp("(www|http:|https:)+S*")), // ссылка на аватарку
     }),
   }),

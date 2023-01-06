@@ -4,9 +4,6 @@ const NotFoundError = require("../erors/NotFoundError");
 const NecorrectDataError = require("../erors/NecorrectDataError");
 const ErorsDelCard = require("../erors/ErorsDelCard");
 const {
-  ERROR_NOT_FOUND_DATA,
-  ERROR_NECORRECT_DATA,
-  ERROR_DEFAULT,
   GOOD,
   CREATE_GOOD,
 } = require("../utils/constants");

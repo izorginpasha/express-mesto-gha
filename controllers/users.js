@@ -6,7 +6,7 @@ const NotFoundError = require("../erors/NotFoundError");
 const NecorrectDataError = require("../erors/NecorrectDataError");
 const EmailErors = require("../erors/EmailErors");
 const AuthErors = require("../erors/AuthErors");
-const { GOOD, CREATE_GOOD } = require("../utils/constants");
+const { GOOD, CREATE_GOOD, key } = require("../utils/constants");
 
 const getUsers = async (req, res,next) => {
   //получить список пользователеи
@@ -30,7 +30,7 @@ const login = async (req, res,next) => {
       }
       return bcrypt.compare(password, user.password).then((result) => {
         if (result) {
-          const token = jwt.sign({ _id: user._id }, "name_name", {
+          const token = jwt.sign({ _id: user._id }, key, {
             expiresIn: "7d",
           });
           return res.status(GOOD.code).json({ token });
