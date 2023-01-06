@@ -33,8 +33,8 @@ const login = async (req, res) => {
       const user = await User.findOne({ email }).select("+password");
       if (!user) {
         return res
-          .status(ERROR_NOT_FOUND_DATA.code)
-          .json({ message: ERROR_NOT_FOUND_DATA.message });
+          .status(ERROR_AUTH.code)
+          .json({ message: ERROR_AUTH.message });
       }
       return bcrypt.compare(password, user.password).then((result) => {
         if (result) {
@@ -44,8 +44,8 @@ const login = async (req, res) => {
           return res.status(GOOD.code).json({ token });
         }
         return res
-          .status(ERROR_NOT_FOUND_DATA.code)
-          .json({ message: ERROR_NOT_FOUND_DATA.message });
+          .status(ERROR_AUTH.code)
+          .json({ message: ERROR_AUTH.message });
       });
     }
     return res
@@ -82,7 +82,7 @@ const createUser = async (req, res) => {
   } catch (e) {
     console.error(e);
     if (e.code === 11000) {
-      return res.status(ERROR_AUTH.code).json({ message: ERROR_AUTH.message });
+      return res.status(409).json({ message: ERROR_AUTH.message });
     }
     if (e.name === "ValidationError") {
       return res
@@ -171,7 +171,7 @@ const getUserId = async (req, res) => {
   //получить отдельного пользователя
   try {
     const { _id } = req.params
-
+console.log(_id)
     const user = await User.findById(_id)
 
     if (user === null) {

@@ -20,9 +20,9 @@ const shemaUser = celebrate({
 })
 router.get('/', getUsers) //Возвращаеть всех пользователей
 router.get('/me', getUser)
-router.get('/:id', getUserId) //возвращает текущего пользователя
+router.get('/:_id', getUserId) //возвращает текущего пользователя
 router.post('/', shemaUser,createUser) //создает пользователя
-router.patch('/me', shemaUser, patchUsers) //обновляет профиль
+router.patch('/me',  patchUsers) //обновляет профиль
 router.patch('/me/avatar', patchAvatarUsers) //обновляет аватар
 
 module.exports = router

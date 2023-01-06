@@ -48,7 +48,7 @@ const deleteCard = async (req, res) => {
     const cardOne = await Card.findById(cardId)
     if (cardOne === null) {
       return res
-        .status(ERROR_NOT_FOUND_DATA.code)
+        .status(403)
         .json({ message: ERROR_NOT_FOUND_DATA.message })
     }
     const userOne = await User.findById(req.user._id)
