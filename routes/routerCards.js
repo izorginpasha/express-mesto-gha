@@ -17,7 +17,11 @@ const shemaCards = celebrate({
 })
 routerCards.get('/', getCards) //Возвращаеть все карточки
 routerCards.post('/',shemaCards, createCard) //создает карточку
-routerCards.delete('/:cardId', deleteCard) //удаляет карточку
+routerCards.delete('/:cardId', celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    cardId: Joi.string().min(8),
+  }),
+}),deleteCard) //удаляет карточку
 routerCards.put('/:cardId/likes', celebrate({
   [Segments.PARAMS]: Joi.object().keys({
     cardId: Joi.string().min(8),
