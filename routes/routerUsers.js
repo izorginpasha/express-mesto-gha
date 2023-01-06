@@ -28,7 +28,7 @@ router.get(
   "/:_id",
   celebrate({
     [Segments.PARAMS]: Joi.object().keys({
-      _id: Joi.string().min(8),
+      _id: Joi.string().length(24).hex(),
     }),
   }),
   getUserId
@@ -42,7 +42,7 @@ router.patch(
       email: Joi.string().email(),
       password: Joi.string(),
       about: Joi.string().min(2).max(30),
-      avatar: Joi.string().pattern(new RegExp("(www|http:|https:)+S*")), // ссылка на аватарку
+      avatar: Joi.string().pattern(new RegExp("(www|http:|https:)+S*")),
     }),
   }),
   patchUsers

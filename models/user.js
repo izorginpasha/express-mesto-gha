@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const { celebrate, Joi, Segments } = require('celebrate');
 // Опишем схему:
 
@@ -21,7 +22,11 @@ const userSchema = new mongoose.Schema({
   avatar: {
     // ссылка на аватарку
     type: String,
-    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png'
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate: {
+      validator: (v) => validator.isURL(v),
+      message: 'Некорректный URL',
+    }
   },
   email: {
     type: String,

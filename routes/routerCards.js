@@ -19,17 +19,17 @@ routerCards.get('/', getCards) //Возвращаеть все карточки
 routerCards.post('/',shemaCards, createCard) //создает карточку
 routerCards.delete('/:cardId', celebrate({
   [Segments.PARAMS]: Joi.object().keys({
-    cardId: Joi.string().min(8),
+    cardId: Joi.string().length(24).hex(),
   }),
 }),deleteCard) //удаляет карточку
 routerCards.put('/:cardId/likes', celebrate({
   [Segments.PARAMS]: Joi.object().keys({
-    cardId: Joi.string().min(8),
+    cardId: Joi.string().length(24).hex(),
   }),
 }), likeCard) // ставит лайк
 routerCards.delete('/:cardId/likes', celebrate({
   [Segments.PARAMS]: Joi.object().keys({
-    cardId: Joi.string().min(8),
+    cardId: Joi.string().length(24).hex(),
   }),
 }), dislikeCard) //удаляет лайк
 

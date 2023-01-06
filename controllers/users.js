@@ -2,29 +2,23 @@ const User = require("../models/user");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const NotFoundError = require("../erors/NotFoundError");
+const NecorrectDataError = require("../erors/NecorrectDataError");
+const EmailErors = require("../erors/EmailErors");
+const AuthErors = require("../erors/AuthErors");
+const { GOOD, CREATE_GOOD } = require("../utils/constants");
 
-const {
-  ERROR_NOT_FOUND_DATA,
-  ERROR_NECORRECT_DATA,
-  ERROR_DEFAULT,
-  GOOD,
-  CREATE_GOOD,
-  ERROR_AUTH,
-} = require("../utils/constants");
-
-const getUsers = async (req, res) => {
+const getUsers = async (req, res,next) => {
   //получить список пользователеи
   try {
     const users = await User.find({});
     return res.status(GOOD.code).json(users);
   } catch (e) {
     console.error(e);
-    return res
-      .status(ERROR_DEFAULT.code)
-      .json({ message: ERROR_DEFAULT.message });
+    return next(e);
   }
 };
-const login = async (req, res) => {
+const login = async (req, res,next) => {
   //авторизация получение токена
   try {
     const body = { ...req.body };
@@ -32,9 +26,7 @@ const login = async (req, res) => {
     if (validator.isEmail(email)) {
       const user = await User.findOne({ email }).select("+password");
       if (!user) {
-        return res
-          .status(ERROR_AUTH.code)
-          .json({ message: ERROR_AUTH.message });
+        return next(new AuthErors("Передан неверный логин или пароль"));
       }
       return bcrypt.compare(password, user.password).then((result) => {
         if (result) {
@@ -43,28 +35,20 @@ const login = async (req, res) => {
           });
           return res.status(GOOD.code).json({ token });
         }
-        return res
-          .status(ERROR_AUTH.code)
-          .json({ message: ERROR_AUTH.message });
+        return next(new AuthErors("Передан неверный логин или пароль"));
       });
     }
-    return res
-      .status(ERROR_NECORRECT_DATA.code)
-      .json({ message: ERROR_NECORRECT_DATA.message });
+    return next(new NecorrectDataError("Переданы некорректные данные"));
   } catch (e) {
     console.error(e);
     if (e.name === "ValidationError") {
-      return res
-        .status(ERROR_NECORRECT_DATA.code)
-        .json({ message: ERROR_NECORRECT_DATA.message });
+      return next(new NecorrectDataError("Переданы некорректные данные"));
     }
-    return res
-      .status(ERROR_DEFAULT.code)
-      .json({ message: ERROR_DEFAULT.message });
+    return next(e);
   }
 };
 
-const createUser = async (req, res) => {
+const createUser = async (req, res,next) => {
   //создать пользователя
   try {
     const body = { ...req.body };
@@ -74,58 +58,41 @@ const createUser = async (req, res) => {
       body.password = await bcrypt.hash(password, 10);
       // передаем базе
       const user = await User.create(body);
-      return res
-        .status(CREATE_GOOD.code)
-        .json({
-          name: user.name,
-          about: user.about,
-          email: user.email,
-          avatar: user.avatar,
-          _id: user._id,
-        });
+      return res.status(CREATE_GOOD.code).json({
+        name: user.name,
+        about: user.about,
+        email: user.email,
+        avatar: user.avatar,
+        _id: user._id,
+      });
     }
-    return res
-      .status(ERROR_NECORRECT_DATA.code)
-      .json({ message: ERROR_NECORRECT_DATA.message });
+    return next(new NecorrectDataError("Переданы некорректные данные"));
   } catch (e) {
     console.error(e);
     if (e.code === 11000) {
-      return res.status(409).json({ message: ERROR_AUTH.message });
+      return next(new EmailErors("Такой Email или пароль, уже есть"));
     }
     if (e.name === "ValidationError") {
-      return res
-        .status(ERROR_NECORRECT_DATA.code)
-        .json({ message: ERROR_NECORRECT_DATA.message });
+      return next(new NecorrectDataError("Переданы некорректные данные"));
     }
-    return res
-      .status(ERROR_DEFAULT.code)
-      .json({ message: ERROR_DEFAULT.message });
+    return next(e);
   }
 };
-const getUser = async (req, res) => {
+const getUser = async (req, res,next) => {
   //получить отдельного пользователя
   try {
     const user = await User.findById(req.user._id);
 
     if (user === null) {
-      return res
-        .status(ERROR_NOT_FOUND_DATA.code)
-        .json({ message: ERROR_NOT_FOUND_DATA.message });
+      throw new NotFoundError("Нет пользователя c таким id");
     }
     return res.status(GOOD.code).json(user);
   } catch (e) {
     console.error(e);
-    if (e.name === "CastError") {
-      return res
-        .status(ERROR_NECORRECT_DATA.code)
-        .json({ message: ERROR_NECORRECT_DATA.message });
-    }
-    return res
-      .status(ERROR_DEFAULT.code)
-      .json({ message: ERROR_DEFAULT.message });
+    return next(e);
   }
 };
-const patchUsers = async (req, res) => {
+const patchUsers = async (req, res,next) => {
   //обновить данные пользователя
 
   try {
@@ -142,16 +109,12 @@ const patchUsers = async (req, res) => {
   } catch (e) {
     console.error(e);
     if (e.name === "ValidationError") {
-      return res
-        .status(ERROR_NECORRECT_DATA.code)
-        .json({ message: ERROR_NECORRECT_DATA.message });
+      return next(new NecorrectDataError("Переданы некорректные данные"));
     }
-    return res
-      .status(ERROR_DEFAULT.code)
-      .json({ message: ERROR_DEFAULT.message });
+    return next(e);
   }
 };
-const patchAvatarUsers = async (req, res) => {
+const patchAvatarUsers = async (req, res,next) => {
   //обновить данные аватарки
   try {
     const user = await User.findByIdAndUpdate(
@@ -166,16 +129,12 @@ const patchAvatarUsers = async (req, res) => {
     return res.status(GOOD.code).json(user);
   } catch (e) {
     if (e.name === "ValidationError") {
-      return res
-        .status(ERROR_NECORRECT_DATA.code)
-        .json({ message: ERROR_NECORRECT_DATA.message });
+      return next(new NecorrectDataError("Переданы некорректные данные"));
     }
-    return res
-      .status(ERROR_DEFAULT.code)
-      .json({ message: ERROR_DEFAULT.message });
+    return next(e);
   }
 };
-const getUserId = async (req, res) => {
+const getUserId = async (req, res, next) => {
   //получить отдельного пользователя
   try {
     const { _id } = req.params;
@@ -183,29 +142,21 @@ const getUserId = async (req, res) => {
     const user = await User.findById(_id);
 
     if (user === null) {
-      return res
-        .status(ERROR_NOT_FOUND_DATA.code)
-        .json({ message: ERROR_NOT_FOUND_DATA.message });
+      throw new NotFoundError("Нет пользователя c таким id");
     }
-    return res
-      .status(GOOD.code)
-      .json({
-        name: user.name,
-        about: user.about,
-        email: user.email,
-        avatar: user.avatar,
-        _id: user._id,
-      });
+    return res.status(GOOD.code).json({
+      name: user.name,
+      about: user.about,
+      email: user.email,
+      avatar: user.avatar,
+      _id: user._id,
+    });
   } catch (e) {
     console.error(e);
     if (e.name === "CastError") {
-      return res
-        .status(ERROR_NECORRECT_DATA.code)
-        .json({ message: ERROR_NECORRECT_DATA.message });
+      return next(new NecorrectDataError("Переданы некорректные данные"));
     }
-    return res
-      .status(ERROR_DEFAULT.code)
-      .json({ message: ERROR_DEFAULT.message });
+    return next(e);
   }
 };
 module.exports = {
