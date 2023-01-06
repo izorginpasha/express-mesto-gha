@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const { celebrate, Joi, Segments } = require('celebrate');
 const {
+  getUserId,
   getUsers,
   getUser,
   createUser,
@@ -18,9 +19,10 @@ const shemaUser = celebrate({
   }),
 })
 router.get('/', getUsers) //Возвращаеть всех пользователей
-router.get('/me', getUser) //возвращает текущего пользователя
+router.get('/me', getUser)
+router.get('/:id', getUserId) //возвращает текущего пользователя
 router.post('/', shemaUser,createUser) //создает пользователя
-router.patch('/me', patchUsers) //обновляет профиль
+router.patch('/me', shemaUser, patchUsers) //обновляет профиль
 router.patch('/me/avatar', patchAvatarUsers) //обновляет аватар
 
 module.exports = router

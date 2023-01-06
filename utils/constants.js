@@ -6,7 +6,7 @@ const ERROR_NECORRECT_DATA = {
 const ERROR_DEFAULT = { code: 400, message: 'Ошибка по-умолчанию' }
 const GOOD = { code: 200, message: 'ok' }
 const CREATE_GOOD = { code: 201, message: 'Ресурс создан' }
-const ERROR_AUTH= { code: 409, message: 'Необходима авторизация' }
+const ERROR_AUTH= { code: 401, message: 'Необходима авторизация' }
 module.exports = {
   ERROR_NOT_FOUND_DATA,
   ERROR_NECORRECT_DATA,

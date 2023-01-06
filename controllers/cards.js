@@ -46,17 +46,21 @@ const deleteCard = async (req, res) => {
 
     const { cardId } = req.params
     const cardOne = await Card.findById(cardId)
+    if (cardOne === null) {
+      return res
+        .status(ERROR_NOT_FOUND_DATA.code)
+        .json({ message: ERROR_NOT_FOUND_DATA.message })
+    }
     const userOne = await User.findById(req.user._id)
     if(cardOne.owner.equals(userOne.id)){
       const card = await Card.findByIdAndRemove(cardId)
-      if (card === null) {
-        return res
-          .status(ERROR_NOT_FOUND_DATA.code)
-          .json({ message: ERROR_NOT_FOUND_DATA.message })
-      }
+
       return res.status(GOOD.code).json(GOOD.message)
 
     }
+    return res
+        .status(ERROR_NOT_FOUND_DATA.code)
+        .json({ message: ERROR_NOT_FOUND_DATA.message })
  } catch (e) {
     console.error(e)
     if (e.name === 'CastError') {
