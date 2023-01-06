@@ -43,16 +43,21 @@ const createCard = async (req, res) => {
 const deleteCard = async (req, res) => {
   //удалить карточку
   try {
-    const { cardId } = req.params
 
-    const card = await Card.findByIdAndRemove(cardId)
-    if (card === null) {
-      return res
-        .status(ERROR_NOT_FOUND_DATA.code)
-        .json({ message: ERROR_NOT_FOUND_DATA.message })
+    const { cardId } = req.params
+    const cardOne = await Card.findById(cardId)
+    const userOne = await User.findById(req.user._id)
+    if(cardOne.owner.equals(userOne.id)){
+      const card = await Card.findByIdAndRemove(cardId)
+      if (card === null) {
+        return res
+          .status(ERROR_NOT_FOUND_DATA.code)
+          .json({ message: ERROR_NOT_FOUND_DATA.message })
+      }
+      return res.status(GOOD.code).json(GOOD.message)
+
     }
-    return res.status(GOOD.code).json(GOOD.message)
-  } catch (e) {
+ } catch (e) {
     console.error(e)
     if (e.name === 'CastError') {
       return res

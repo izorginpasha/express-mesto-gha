@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const validator = require("validator");
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const {
   ERROR_NOT_FOUND_DATA,
@@ -9,7 +9,7 @@ const {
   ERROR_DEFAULT,
   GOOD,
   CREATE_GOOD,
-  ERROR_AUTH
+  ERROR_AUTH,
 } = require("../utils/constants");
 
 const getUsers = async (req, res) => {
@@ -24,27 +24,29 @@ const getUsers = async (req, res) => {
       .json({ message: ERROR_DEFAULT.message });
   }
 };
-const login =async (req, res) => {//авторизация получение токена
- try {
+const login = async (req, res) => {
+  //авторизация получение токена
+  try {
     const body = { ...req.body };
     const { password, email } = body;
     if (validator.isEmail(email)) {
-      const user = await User.findOne({email}).select('+password');
-      if(!user){
+      const user = await User.findOne({ email }).select("+password");
+      if (!user) {
         return res
-        .status(ERROR_NOT_FOUND_DATA.code)
-        .json({ message: ERROR_NOT_FOUND_DATA.message });
+          .status(ERROR_NOT_FOUND_DATA.code)
+          .json({ message: ERROR_NOT_FOUND_DATA.message });
       }
-    return  bcrypt.compare(password,user.password).then(result =>{
-      if (result){
-        const token = jwt.sign({ _id: user._id }, 'name_name',{ expiresIn: '7d'});
-        return res.status(GOOD.code).json({token});
-      }
-      return res
-      .status(ERROR_NOT_FOUND_DATA.code)
-      .json({ message: ERROR_NOT_FOUND_DATA.message });
-    })
-
+      return bcrypt.compare(password, user.password).then((result) => {
+        if (result) {
+          const token = jwt.sign({ _id: user._id }, "name_name", {
+            expiresIn: "7d",
+          });
+          return res.status(GOOD.code).json({ token });
+        }
+        return res
+          .status(ERROR_NOT_FOUND_DATA.code)
+          .json({ message: ERROR_NOT_FOUND_DATA.message });
+      });
     }
     return res
       .status(ERROR_NECORRECT_DATA.code)
@@ -60,7 +62,7 @@ const login =async (req, res) => {//авторизация получение т
       .status(ERROR_DEFAULT.code)
       .json({ message: ERROR_DEFAULT.message });
   }
-}
+};
 
 const createUser = async (req, res) => {
   //создать пользователя
@@ -68,12 +70,11 @@ const createUser = async (req, res) => {
     const body = { ...req.body };
     const { password, email } = body;
     if (validator.isEmail(email)) {
-       // хешируем пароль
-     body.password =   await bcrypt.hash(password, 10);
-     // передаем базе
-     const user = await User.create(body);
-     return res.status(CREATE_GOOD.code).json(user);
-
+      // хешируем пароль
+      body.password = await bcrypt.hash(password, 10);
+      // передаем базе
+      const user = await User.create(body);
+      return res.status(CREATE_GOOD.code).json(user);
     }
     return res
       .status(ERROR_NECORRECT_DATA.code)
@@ -81,10 +82,8 @@ const createUser = async (req, res) => {
   } catch (e) {
     console.error(e);
     if (e.code === 11000) {
-      return res
-        .status(ERROR_AUTH.code)
-        .json({ message: ERROR_AUTH.message });
-  }
+      return res.status(ERROR_AUTH.code).json({ message: ERROR_AUTH.message });
+    }
     if (e.name === "ValidationError") {
       return res
         .status(ERROR_NECORRECT_DATA.code)
@@ -98,8 +97,6 @@ const createUser = async (req, res) => {
 const getUser = async (req, res) => {
   //получить отдельного пользователя
   try {
-
-console.log(req.user);
     const user = await User.findById(req.user._id);
 
     if (user === null) {
@@ -176,5 +173,5 @@ module.exports = {
   createUser,
   patchUsers,
   patchAvatarUsers,
-  login
+  login,
 };

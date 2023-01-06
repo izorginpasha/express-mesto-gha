@@ -1,5 +1,14 @@
 const mongoose = require('mongoose')
 // Опишем схему:
+// const shemaCards = celebrate({
+//   [Segments.BODY]: Joi.object().keys({
+//     name: Joi.string().min(2).max(30).required(),// имя
+//     link: Joi.string().required(),// ссылка
+//     owner:Joi.object().required(),
+//     likes:Joi.object().default([]),
+//     createdAt: Joi.date().default(Date.now),
+//   }),
+// })
 const userSchema = new mongoose.Schema({
   name: {
     // имя

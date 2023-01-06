@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
+const { celebrate, Joi, Segments } = require('celebrate');
 // Опишем схему:
+
 const userSchema = new mongoose.Schema({
   name: {
     // имя пользователя
