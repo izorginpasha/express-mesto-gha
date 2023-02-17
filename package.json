@@ -27,7 +27,9 @@
     "eslint-plugin-import": "^2.26.0",
     "joi": "^17.7.0",
     "jsonwebtoken": "^9.0.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "pash": "^0.1.5",
+    "react-router-dom": "^6.3.0"
   },
   "devDependencies": {
     "bcryptjs": "^2.4.3",

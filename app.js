@@ -8,6 +8,7 @@ const { Console } = require("console");
 const { errors } = require("celebrate");
 const { login, createUser } = require("./controllers/users");
 const NotFoundError = require('./erors/NotFoundError');
+const path = require('path');
 // Слушаем 3000 порт
 const { celebrate, Joi, Segments } = require("celebrate");
 const shemaUser = celebrate({
@@ -28,12 +29,18 @@ const { PORT = 3000 } = process.env; //порт
 const app = express(); //создаем сервер
 // подключаем мидлвары, роуты и всё остальное...
 app.use(bodyParser.json());
+// подключаем главный роутер приложения на /api
+
+//app.use('/api', require('../router'));
+
+// раздаём папку с собранным фронтендом
+app.use(express.static(path.join(__dirname, 'build')));
 // роуты, не требующие авторизации,
 app.post("/signin", shemaUser, login);
 app.post("/signup", shemaUser, createUser);
 // авторизация
 app.use(auth);
-app.use("/sing", routerUsers); //роуты на пути user
+//app.use("/sing", routerUsers); //роуты на пути user
 app.use("/users", routerUsers); //роуты на пути user
 app.use("/cards", routerCards); //роуты на пути Cards
 try {app.all("*", function (req, res) {
