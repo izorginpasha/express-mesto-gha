@@ -31,7 +31,7 @@ const app = express(); //создаем сервер
 app.use(bodyParser.json());
 // подключаем главный роутер приложения на /api
 
-//app.use('/api', require('../router'));
+//app.use('/api', require('./routes/routes'));
 
 // раздаём папку с собранным фронтендом
 app.use(express.static(path.join(__dirname, 'build')));
@@ -41,8 +41,8 @@ app.post("/signup", shemaUser, createUser);
 // авторизация
 app.use(auth);
 //app.use("/sing", routerUsers); //роуты на пути user
-app.use("/users", routerUsers); //роуты на пути user
-app.use("/cards", routerCards); //роуты на пути Cards
+app.use("/api/users", routerUsers); //роуты на пути user
+app.use("/api/cards", routerCards); //роуты на пути Cards
 try {app.all("*", function (req, res) {
   //обработка неправильных путей
   console.log("404 handler..");
