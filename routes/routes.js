@@ -43,11 +43,11 @@ router.get("/users", getUsers); //Возвращаеть всех пользов
 router.get("/users/me", getUser); //возвращает текущего пользователя
 router.get(
   "/users/:_id",
-  celebrate({
-    [Segments.PARAMS]: Joi.object().keys({
-      _id: Joi.string().length(24).hex(),
-    }),
-  }),
+  // celebrate({
+  //   [Segments.PARAMS]: Joi.object().keys({
+  //     _id: Joi.string().length(24).hex(),
+  //   }),
+  // }),
   getUserId
 ); //возвращает  пользователя по id
 router.post("/users", shemaUser, createUser); //создает пользователя

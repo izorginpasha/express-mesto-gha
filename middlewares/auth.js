@@ -3,11 +3,13 @@ const { ERROR_AUTH } = require("../utils/constants");
 const AuthErors = require("../erors/AuthErors");
 const {  key } = require("../utils/constants");
 module.exports = (req, res, next) => {
+  const { authorization } = req.headers;
 
+  if (!authorization || !authorization.startsWith("Bearer ")) {
+    return next(new AuthErors("Передан неверный логин или пароль"));
+  }
 
-  if (localStorage.getItem('jwt')) {
-
-  const token = localStorage.getItem('jwt');
+  const token = authorization.replace("Bearer ", "");
   let payload;
 
   try {
@@ -18,7 +20,7 @@ module.exports = (req, res, next) => {
   }
 
   req.user = payload; // записываем пейлоуд в объект запроса
-console.log(req.user);
-  next();
- } // пропускаем запрос дальше
+
+  next(); // пропускаем запрос дальше
 };
+

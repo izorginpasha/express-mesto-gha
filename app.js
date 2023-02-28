@@ -31,22 +31,30 @@ const app = express(); //создаем сервер
 app.use(bodyParser.json());
 // подключаем главный роутер приложения на /api
 
-//app.use('/api', require('./routes/routes'));
+
 
 // раздаём папку с собранным фронтендом
-app.use(express.static(path.join(__dirname, 'build')));
-// роуты, не требующие авторизации,
-app.post("/signin", shemaUser, login);
-app.post("/signup", shemaUser, createUser);
 // авторизация
-app.use(auth);
-//app.use("/sing", routerUsers); //роуты на пути user
+//app.use(auth);
+// роуты, не требующие авторизации,
+app.use(express.static(path.join(__dirname, 'build')));
 app.use("/api/users", routerUsers); //роуты на пути user
-app.use("/api/cards", routerCards); //роуты на пути Cards
+app.post("/signup", shemaUser, createUser);
+app.post("/signin", shemaUser, login);
+app.get("*", function(req, res) {
+  res.redirect('/');
+});
+
+//app.use('/api', require('./routes/routes'));
+//app.use("/sing", routerUsers); //роуты на пути user
+
+// app.use("/api/cards", routerCards); //роуты на пути Cards
+
 try {app.all("*", function (req, res) {
   //обработка неправильных путей
   console.log("404 handler..");
   throw new NotFoundError('неверныи путь');
+
  // res.status(404).json({ message: "Произошла ошибка" });
 })} catch{
 next(err);

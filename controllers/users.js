@@ -21,8 +21,11 @@ const getUsers = async (req, res,next) => {
 const login = async (req, res,next) => {
   //авторизация получение токена
   try {
+    console.log("yes авторизация получение токена");
+
     const body = { ...req.body };
     const { password, email } = body;
+    console.log(password, email);
     if (validator.isEmail(email)) {
       const user = await User.findOne({ email }).select("+password");
       if (!user) {
@@ -33,6 +36,7 @@ const login = async (req, res,next) => {
           const token = jwt.sign({ _id: user._id }, key, {
             expiresIn: "7d",
           });
+          console.log(token);
           return res.status(GOOD.code).json({ token });
         }
         return next(new AuthErors("Передан неверный логин или пароль"));
@@ -80,13 +84,32 @@ const createUser = async (req, res,next) => {
 };
 const getUser = async (req, res,next) => {
   //получить отдельного пользователя
-  try {
-    const user = await User.findById(req.user._id);
 
-    if (user === null) {
+  console.log("getUser" );
+  const { authorization } = req.headers;
+  console.log(authorization );
+  if (!authorization || !authorization.startsWith("Bearer ")) {
+    return next(new AuthErors("Передан неверный логин или пароль"));
+  }
+
+  const token = authorization.replace("Bearer ", "");
+  let payload;
+
+  try {
+    payload = jwt.verify(token, key);
+  } catch (err) {
+    console.log(err);
+    return next(new AuthErors("Передан неверный логин или пароль"));
+  }
+
+  req.user = payload; // записываем пейлоуд в объект запроса
+  try {
+
+
+    if (req.user._id === null) {
       throw new NotFoundError("Нет пользователя c таким id");
     }
-    return res.status(GOOD.code).json(user);
+    return res.status(GOOD.code).json(req.user._id);
   } catch (e) {
     console.error(e);
     return next(e);
@@ -136,6 +159,7 @@ const patchAvatarUsers = async (req, res,next) => {
 };
 const getUserId = async (req, res, next) => {
   //получить отдельного пользователя
+  console.log("getUserId" );
   try {
     const { _id } = req.params;
     console.log(_id);
@@ -151,6 +175,7 @@ const getUserId = async (req, res, next) => {
       avatar: user.avatar,
       _id: user._id,
     });
+
   } catch (e) {
     console.error(e);
     if (e.name === "CastError") {
