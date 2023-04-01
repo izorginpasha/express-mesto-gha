@@ -86,8 +86,9 @@ const getUser = async (req, res,next) => {
   //получить отдельного пользователя
 
   console.log("getUser" );
+
   const { authorization } = req.headers;
-  console.log(authorization );
+
   if (!authorization || !authorization.startsWith("Bearer ")) {
     return next(new AuthErors("Передан неверный логин или пароль"));
   }
@@ -162,7 +163,6 @@ const getUserId = async (req, res, next) => {
   console.log("getUserId" );
   try {
     const { _id } = req.params;
-    console.log(_id);
     const user = await User.findById(_id);
 
     if (user === null) {

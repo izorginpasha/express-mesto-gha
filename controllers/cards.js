@@ -3,12 +3,13 @@ const User = require("../models/user");
 const NotFoundError = require("../erors/NotFoundError");
 const NecorrectDataError = require("../erors/NecorrectDataError");
 const ErorsDelCard = require("../erors/ErorsDelCard");
-const {
-  GOOD,
-  CREATE_GOOD,
-} = require("../utils/constants");
+const validator = require("validator");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { GOOD, CREATE_GOOD, key } = require("../utils/constants");
 const getCards = async (req, res, next) => {
   //получить список карточек
+  console.log("getCards");
   try {
     const cards = await Card.find({}).populate(["owner", "likes"]);
     return res.status(GOOD.code).json(cards);
@@ -68,10 +69,11 @@ const likeCard = async (req, res, next) => {
     if (card === null) {
       throw new NotFoundError("Нет такои карточки");
     }
-    const newCard = await Card.find({ _id: req.params.cardId }).populate([
+    const newCard = await Card.findOne({ _id: req.params.cardId }).populate([
       "owner",
       "likes",
     ]);
+
 
     return res.status(GOOD.code).json(newCard);
   } catch (e) {
@@ -96,7 +98,7 @@ const dislikeCard = async (req, res, next) => {
     if (card === null) {
       throw new NotFoundError("Нет такои карточки");
     }
-    const newCard = await Card.find({ _id: req.params.cardId }).populate([
+    const newCard = await Card.findOne({ _id: req.params.cardId }).populate([
       "owner",
       "likes",
     ]);

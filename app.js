@@ -7,8 +7,9 @@ const auth = require("./middlewares/auth");
 const { Console } = require("console");
 const { errors } = require("celebrate");
 const { login, createUser } = require("./controllers/users");
-const NotFoundError = require('./erors/NotFoundError');
-const path = require('path');
+const NotFoundError = require("./erors/NotFoundError");
+const path = require("path");
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 // Слушаем 3000 порт
 const { celebrate, Joi, Segments } = require("celebrate");
 const shemaUser = celebrate({
@@ -31,34 +32,31 @@ const app = express(); //создаем сервер
 app.use(bodyParser.json());
 // подключаем главный роутер приложения на /api
 
-
-
-// раздаём папку с собранным фронтендом
-// авторизация
-//app.use(auth);
 // роуты, не требующие авторизации,
-app.use(express.static(path.join(__dirname, 'build')));
-app.use("/api/users", routerUsers); //роуты на пути user
+app.use(express.static(path.join(__dirname, "build")));
 app.post("/signup", shemaUser, createUser);
 app.post("/signin", shemaUser, login);
-app.get("*", function(req, res) {
-  res.redirect('/');
+// раздаём папку с собранным фронтендом
+
+// авторизация
+app.use("/api/users", auth, routerUsers); //роуты на пути user
+app.use("/api/cards", auth, routerCards); //роуты на пути Cards
+
+app.get("*", function (req, res) {
+  res.redirect("/");
 });
 
-//app.use('/api', require('./routes/routes'));
-//app.use("/sing", routerUsers); //роуты на пути user
 
-// app.use("/api/cards", routerCards); //роуты на пути Cards
+try {
+  app.all("*", function (req, res) {
+    //обработка неправильных путей
+    console.log("404 handler..");
+    throw new NotFoundError("неверныи путь");
 
-try {app.all("*", function (req, res) {
-  //обработка неправильных путей
-  console.log("404 handler..");
-  throw new NotFoundError('неверныи путь');
-
- // res.status(404).json({ message: "Произошла ошибка" });
-})} catch{
-next(err);
-
+    // res.status(404).json({ message: "Произошла ошибка" });
+  });
+} catch {
+  next(err);
 }
 
 try {
@@ -73,7 +71,8 @@ try {
 } catch {
   console.log("not connected MongoDB");
 }
-app.use(errors());
-app.use((err, req, res, next) => {
+app.use(requestLogger); // подключаем логгер запросов
+app.use(errors());// обработчик ошибок celebrate
+app.use((err, req, res, next) => {// централизованный обработчик ошибок
   res.status(err.statusCode).send({ message: err.message });
 });
