@@ -33,7 +33,7 @@ app.use(bodyParser.json());
 // подключаем главный роутер приложения на /api
 
 // роуты, не требующие авторизации,
-app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.join(__dirname, "frontend")));
 app.post("/signup", shemaUser, createUser);
 app.post("/signin", shemaUser, login);
 // раздаём папку с собранным фронтендом

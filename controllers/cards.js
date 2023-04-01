@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const { GOOD, CREATE_GOOD, key } = require("../utils/constants");
 const getCards = async (req, res, next) => {
   //получить список карточек
-  console.log("getCards");
+
   try {
     const cards = await Card.find({}).populate(["owner", "likes"]);
     return res.status(GOOD.code).json(cards);

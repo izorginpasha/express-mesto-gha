@@ -8,7 +8,7 @@ const EmailErors = require("../erors/EmailErors");
 const AuthErors = require("../erors/AuthErors");
 const { GOOD, CREATE_GOOD, key } = require("../utils/constants");
 
-const getUsers = async (req, res,next) => {
+const getUsers = async (req, res, next) => {
   //получить список пользователеи
   try {
     const users = await User.find({});
@@ -18,14 +18,11 @@ const getUsers = async (req, res,next) => {
     return next(e);
   }
 };
-const login = async (req, res,next) => {
+const login = async (req, res, next) => {
   //авторизация получение токена
   try {
-    console.log("yes авторизация получение токена");
-
     const body = { ...req.body };
     const { password, email } = body;
-    console.log(password, email);
     if (validator.isEmail(email)) {
       const user = await User.findOne({ email }).select("+password");
       if (!user) {
@@ -36,7 +33,6 @@ const login = async (req, res,next) => {
           const token = jwt.sign({ _id: user._id }, key, {
             expiresIn: "7d",
           });
-          console.log(token);
           return res.status(GOOD.code).json({ token });
         }
         return next(new AuthErors("Передан неверный логин или пароль"));
@@ -52,7 +48,7 @@ const login = async (req, res,next) => {
   }
 };
 
-const createUser = async (req, res,next) => {
+const createUser = async (req, res, next) => {
   //создать пользователя
   try {
     const body = { ...req.body };
@@ -82,10 +78,8 @@ const createUser = async (req, res,next) => {
     return next(e);
   }
 };
-const getUser = async (req, res,next) => {
+const getUser = async (req, res, next) => {
   //получить отдельного пользователя
-
-  console.log("getUser" );
 
   const { authorization } = req.headers;
 
@@ -105,8 +99,6 @@ const getUser = async (req, res,next) => {
 
   req.user = payload; // записываем пейлоуд в объект запроса
   try {
-
-
     if (req.user._id === null) {
       throw new NotFoundError("Нет пользователя c таким id");
     }
@@ -116,7 +108,7 @@ const getUser = async (req, res,next) => {
     return next(e);
   }
 };
-const patchUsers = async (req, res,next) => {
+const patchUsers = async (req, res, next) => {
   //обновить данные пользователя
 
   try {
@@ -138,7 +130,7 @@ const patchUsers = async (req, res,next) => {
     return next(e);
   }
 };
-const patchAvatarUsers = async (req, res,next) => {
+const patchAvatarUsers = async (req, res, next) => {
   //обновить данные аватарки
   try {
     const user = await User.findByIdAndUpdate(
@@ -160,7 +152,7 @@ const patchAvatarUsers = async (req, res,next) => {
 };
 const getUserId = async (req, res, next) => {
   //получить отдельного пользователя
-  console.log("getUserId" );
+
   try {
     const { _id } = req.params;
     const user = await User.findById(_id);
@@ -175,7 +167,6 @@ const getUserId = async (req, res, next) => {
       avatar: user.avatar,
       _id: user._id,
     });
-
   } catch (e) {
     console.error(e);
     if (e.name === "CastError") {
